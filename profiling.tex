@@ -137,6 +137,8 @@
 	{\begin{itemize}}
 	{\end{itemize}}
 
+\newcommand{\seclabel}[1]{\label{sec:#1}}
+
 % D O C U M E N T
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \begin{document}
@@ -159,19 +161,72 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \begin{abstract}
-hello
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 \end{abstract}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Introduction}\label{sec:introduction}
+\section{Introduction}\seclabel{introduction}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- Specific domain are very present in today software development
+
+- Whereas research on domain specific languages made great progresses on language specification, implementation and verification, little has been done on profiling. 
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\section{Problem}\seclabel{problem}
+
+\subsection{Difficulty of profiling a specific domain}
+Example with MessageTally
+
+\subsection{Summary of the problem}
+Current profilers are useful to gather dynamic data against the model offered by the software structure (\eg classes, files, methods) and the execution (\eg method call frame, runtime stack, heap). 
+
+However, there is a significant gap between the model offered by the executing platform and the model of 
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\section{Domain Specific Profiler}\seclabel{problem}
+
+%:========
+\subsection{Domain Specific Profiler in a Nutshell}
+
+- having the profiler aware of elements to be profiled, and not about their implementation
+
+- assuming that each operation of the domain is constant in time
+
+
+%:========
+\subsection{Case Study: Parsing Framework with PetitParser}
+
+Coverage of the grammar
+
+Check of the parseOn: method. 
+
+%:========
+\subsection{Case Study: Events in Omnibrowser}
+
+Profiling the events 
+
+%:========
+\subsection{Case Study: Caches in Mondrian}
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\section{Implementation}\seclabel{implementation}
+
+Implemented with the Spy profiling framework
+
+%:========
+\subsection{Benchmark}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\section{Conclusion}\seclabel{conclusion}
+
+This problem is rather well generalized. For example, profiling a virtual machine is a particularly difficult activity, since instead of providing information about bytecode and primtiive executions, the virtual machine talks about functions executions\footnote{\url{http://www.mirandabanda.org/cogblog/2008/12/30/the-idee-fixe-and-the-perfected-profiler/}}.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section*{Acknowledgments}
 
-\small Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\small We gratefully thanks ...
 
 % bibliography
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
