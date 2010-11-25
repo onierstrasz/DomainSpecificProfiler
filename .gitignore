@@ -1,0 +1,7 @@
+scg.bib
+*.blg
+*.aux
+*.log
+*.out
+*.pdf
+*.synctex.gz
