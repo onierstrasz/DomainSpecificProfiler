@@ -1,0 +1,180 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\documentclass[runningheads]{llncs}
+
+% packages
+\usepackage{xspace}
+\usepackage{ifthen}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+\usepackage{balance}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{needspace}
+\usepackage{microtype}
+\usepackage{bold-extra}
+
+% constants
+\newcommand{\Title}{Domain-Specific Profiling}
+\newcommand{\TitleShort}{\Title}
+\newcommand{\Authors}{Alexandre Bergel, Lukas Renggli}
+\newcommand{\AuthorsShort}{A. Bergel, L. Renggli}
+
+% references
+\usepackage[colorlinks]{hyperref}
+\usepackage[all]{hypcap}
+\setcounter{tocdepth}{2}
+\hypersetup{
+	colorlinks=true,
+	urlcolor=black,
+	linkcolor=black,
+	citecolor=black,
+	plainpages=false,
+	bookmarksopen=true,
+	pdfauthor={\Authors},
+	pdftitle={\Title}}
+
+\def\chapterautorefname{Chapter}
+\def\appendixautorefname{Appendix}
+\def\sectionautorefname{Section}
+\def\subsectionautorefname{Section}
+\def\figureautorefname{Figure}
+\def\tableautorefname{Table}
+\def\listingautorefname{Listing}
+
+% source code
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\definecolor{source}{gray}{0.9}
+\lstset{
+	language={},
+	% characters
+	tabsize=3,
+	upquote=true,
+	escapechar={!},
+	keepspaces=true,
+	breaklines=true,
+	alsoletter={\#:},
+	breakautoindent=true,
+	columns=fullflexible,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	% background
+	frame=single,
+    framerule=0pt,
+	backgroundcolor=\color{source},
+	% numbering
+	numbersep=5pt,
+	numberstyle=\tiny,
+	numberfirstline=true,
+	% captioning
+	captionpos=b,
+	% formatting (html)
+	moredelim=[is][\textbf]{<b>}{</b>},
+	moredelim=[is][\textit]{<i>}{</i>},
+	moredelim=[is][\color{red}\uwave]{<u>}{</u>},
+	moredelim=[is][\color{red}\sout]{<del>}{</del>},
+	moredelim=[is][\color{blue}\underline]{<ins>}{</ins>}}
+\newcommand{\ct}{\lstinline[backgroundcolor=\color{white},basicstyle=\footnotesize\ttfamily]}
+\newcommand{\lct}[1]{{\small\tt #1}}
+
+% tikz
+% \usepackage{tikz}
+% \usetikzlibrary{matrix}
+% \usetikzlibrary{arrows}
+% \usetikzlibrary{external}
+% \usetikzlibrary{positioning}
+% \usetikzlibrary{shapes.multipart}
+% 
+% \tikzset{
+% 	every picture/.style={semithick},
+% 	every text node part/.style={align=center}}
+% \tikzexternalize[prefix=figures/]{quality}
+
+% proof-reading
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+\newcommand{\ra}{$\rightarrow$}
+\newcommand{\ugh}[1]{\textcolor{red}{\uwave{#1}}} % please rephrase
+\newcommand{\ins}[1]{\textcolor{blue}{\uline{#1}}} % please insert
+\newcommand{\del}[1]{\textcolor{red}{\sout{#1}}} % please delete
+\newcommand{\chg}[2]{\textcolor{red}{\sout{#1}}{\ra}\textcolor{blue}{\uline{#2}}} % please change
+\newcommand{\chk}[1]{\textcolor{ForestGreen}{#1}} % changed, please check
+
+% comments \nb{label}{color}{text}
+\newboolean{showcomments}
+\setboolean{showcomments}{true}
+\ifthenelse{\boolean{showcomments}}
+	{\newcommand{\nb}[3]{
+		{\colorbox{#2}{\bfseries\sffamily\scriptsize\textcolor{white}{#1}}}
+		{\textcolor{#2}{\sf\small$\blacktriangleright$\textit{#3}$\blacktriangleleft$}}}
+	 \newcommand{\version}{\emph{\scriptsize$-$Id$-$}}}
+	{\newcommand{\nb}[2]{}
+	 \newcommand{\version}{}}
+\newcommand{\rev}[2]{\nb{Reviewer #1}{red}{#2}}
+\newcommand{\ab}[1]{\nb{Alexandre}{blue}{#1}}
+\newcommand{\lr}[1]{\nb{Lukas}{orange}{#1}}
+
+% graphics: \fig{position}{percentage-width}{filename}{caption}
+\DeclareGraphicsExtensions{.png,.jpg,.pdf,.eps,.gif}
+\graphicspath{{figures/}}
+\newcommand{\fig}[4]{
+	\begin{figure}[#1]
+		\centering
+		\includegraphics[width=#2\textwidth]{#3}
+		\caption{\label{fig:#3}#4}
+	\end{figure}}
+
+% abbreviations
+\newcommand{\ie}{\emph{i.e.,}\xspace}
+\newcommand{\eg}{\emph{e.g.,}\xspace}
+\newcommand{\etc}{\emph{etc.}\xspace}
+\newcommand{\etal}{\emph{et al.}\xspace}
+
+% lists
+\newenvironment{bullets}[0]
+	{\begin{itemize}}
+	{\end{itemize}}
+
+% D O C U M E N T
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\begin{document}
+
+% T I T L E
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\title{\Title}
+\titlerunning{\TitleShort}
+
+\author{Alexandre Bergel \and Lukas Renggli} 
+\authorrunning{\AuthorsShort}
+
+\institute{PLEIAD Lab, Department of Computer Science (DCC),\\
+	University of Chile, Santiago, Chile}
+
+\maketitle
+
+% A B S T R A C T
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\begin{abstract}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\end{abstract}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\section{Introduction}\label{sec:introduction}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\section*{Acknowledgments}
+
+\small Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+% bibliography
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\bibliographystyle{splncs}
+\bibliography{scg}
+
+\end{document}
