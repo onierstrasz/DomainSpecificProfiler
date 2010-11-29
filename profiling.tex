@@ -169,15 +169,23 @@
 
 - Specific domain are very present in today software development
 
-- Whereas research on domain specific languages made great progresses on language specification, implementation and verification, little has been done on profiling. 
+- Whereas research on domain-specific languages made great progresses on language specification, implementation and verification, little has been done on profiling.
+
+- Comparison with domain-specific code checking \cite{Reng10b}.
+
+- Our approach to profiling \cite{Berg10c}.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Problem}\seclabel{problem}
 
 \subsection{Difficulty of profiling a specific domain}
-Example with MessageTally
+
+- Example with MessageTally
+
+- PetitParser coverage problem
 
 \subsection{Summary of the problem}
+
 Current profilers are useful to gather dynamic data against the model offered by the software structure (\eg classes, files, methods) and the execution (\eg method call frame, runtime stack, heap). 
 
 However, there is a significant gap between the model offered by the executing platform and the model of 
@@ -190,6 +198,8 @@ However, there is a significant gap between the model offered by the executing p
 \subsection{Domain Specific Profiler in a Nutshell}
 
 - having the profiler aware of elements to be profiled, and not about their implementation
+
+- perform profiling on the abstraction of the domain, not in the host language
 
 - assuming that each operation of the domain is constant in time
 
@@ -221,7 +231,7 @@ Implemented with the Spy profiling framework
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Conclusion}\seclabel{conclusion}
 
-This problem is rather well generalized. For example, profiling a virtual machine is a particularly difficult activity, since instead of providing information about bytecode and primtiive executions, the virtual machine talks about functions executions\footnote{\url{http://www.mirandabanda.org/cogblog/2008/12/30/the-idee-fixe-and-the-perfected-profiler/}}.
+This problem is rather well generalized. For example, profiling a virtual machine is a particularly difficult activity, since instead of providing information about bytecode and primitive executions, the virtual machine talks about functions executions\footnote{\url{http://www.mirandabanda.org/cogblog/2008/12/30/the-idee-fixe-and-the-perfected-profiler/}}.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section*{Acknowledgments}
