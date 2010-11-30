@@ -197,27 +197,62 @@ However, there is a significant gap between the model offered by the executing p
 %:========
 \subsection{Domain Specific Profiler in a Nutshell}
 
-- having the profiler aware of elements to be profiled, and not about their implementation
+\paragraph{}
+ having the profiler aware of elements to be profiled, and not about their implementation
 
-- perform profiling on the abstraction of the domain, not in the host language
+\paragraph{}
+perform profiling on the abstraction of the domain, not in the host language
 
-- assuming that each operation of the domain is constant in time
+\paragraph{}
+ assuming that each operation of the domain is constant in time
+
+
+\begin{tabular}{c|c|c}
+					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
+					&						& 		\\
+\textbf{$M_0$ - Static}	&	classes, methods		& 		\\
+					&						& 		\\\hline
+					&						& Mondrian\\
+\textbf{$M_1$ - Dynamic}	&	method activation		& OB-metamodel\\
+					&						& Grammars\\ \hline
+					&						& OB Browser\\
+\textbf{$M_2$ -} 		&						& Visualization\\
+					&						& Mondrian
+\end{tabular}
+
+%:========
+\subsection{Case Study: Caches in Mondrian}
+
+\paragraph{Keeping track of the caches}
+
+\begin{lstlisting}
+execute	| view allNodes |	view := MOViewRenderer title: 'Debugging'.	view interaction every: 1500 do: [ 			view root clear.			view shape rectangle							if: #hasCachedForm fillColor: Color red;							disableCache.			allNodes := easel canvas root allNodes.			view nodes: allNodes forEach: [:each |				view nodes: each metricCaches.				view gridLayout gapSize: 2.			].  			view edges: allNodes from: #owner to: #yourself.			view treeLayout.								view root applyLayout. ].		view open.
+\end{lstlisting}
+
+%:========
+\subsection{Case Study: Events in Omnibrowser}
+
+\paragraph{Meta-model instantiation}
+\begin{lstlisting}
+	model := OBSystemBrowser onClass: Object selector: #printOn:.	profile := OmniProfiler 		profile: [ window :=  model open ]		inPackage: 'OmniBrowser'.
+\end{lstlisting}
+
+\paragraph{Recording events}
+\begin{lstlisting}
+	model := OBSystemBrowser onClass: Object.	actualCounter := Dictionary new.	previousCounter := Dictionary new.	model announcer		observe: OBAnnouncement		do: [ :ann | actualCounter at: ann class put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ].
+\end{lstlisting}
 
 
 %:========
 \subsection{Case Study: Parsing Framework with PetitParser}
 
-Coverage of the grammar
+\paragraph{Grammar coverage}
+\begin{lstlisting}
+	profile := PetitProfiler profile: [ PPSmalltalkGrammarTests suite run: TestResult new ] inPackage: 'PetitParser'.	parser := PPParserResource current parserAt: PPSmalltalkGrammar.		view := MOViewRenderer new.	view shape rectangle 		size: [:p | ((profile numberOfActivationsFor: p) + 1) log * 10 ];		if: [:p | (profile numberOfActivationsFor: p) = 0] borderColor: Color red.	view nodes: parser allParsers.	view shape arrowedLine.	view edgesToAll: #children.	view treeLayout.	view open
+\end{lstlisting}
 
 Check of the parseOn: method. 
 
-%:========
-\subsection{Case Study: Events in Omnibrowser}
-
-Profiling the events 
-
-%:========
-\subsection{Case Study: Caches in Mondrian}
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
