@@ -90,7 +90,6 @@
 % \tikzset{
 % 	every picture/.style={semithick},
 % 	every text node part/.style={align=center}}
-% \tikzexternalize[prefix=figures/]{quality}
 
 % proof-reading
 \usepackage{xcolor}
@@ -175,6 +174,10 @@
 
 - Our approach to profiling \cite{Berg10c}. Our strategy to apply it to specific domains (maybe with figure).
 
+The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of various real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
+
+The remainder of this paper is structured as follows: \autoref{sec:problem} illustrates the problems of using a general-purpose profiler on code building on top of domain-specific language. \autoref{sec:profiler} introduces our approach to domain-specific profiling with three case-studies. \autoref{sec:implementation} presents our infrastructure to implement domain-specific profilers; and \autoref{sec:conclusion} summarizes the paper and discusses future work.
+
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Problem}\seclabel{problem}
 
@@ -186,9 +189,9 @@
 
 \subsection{Summary of the problem}
 
-Current profilers are useful to gather dynamic data against the model offered by the software structure (\eg classes, files, methods) and the execution (\eg method call frame, runtime stack, heap). 
+Current profilers are useful to gather runtime data (\eg method invocations, method coverage, call trees, memory consumption, \etc) from the static code model offered by the programming language (\eg packages, classes, methods, statements, \etc). This works well for to profile concerns at the abstraction level of the programming language like execution time, invocation count, memory consumption, code coverage, flow analysis, \etc.
 
-However, there is a significant gap between the model offered by the executing platform and the model of 
+In many today's software there is a significant gap between the model offered by the execution platform and the model of the actually running application. The proliferation of meta-models and domain-specific languages builds new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
