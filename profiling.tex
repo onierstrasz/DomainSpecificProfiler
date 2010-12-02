@@ -213,9 +213,11 @@ perform profiling on the abstraction of the domain, not in the host language
 
 The profiling information need to be mapped back to the profiled model. This implies that the presentation should provide enough information to be able to navigate between the profile to the model.
 
-\paragraph{Homogeneous operation cost.}
-When considering the execution time of a particular operation, each operation must be treated as an atomic and uniform operation, independently of the object receiver. \ab{maybe not... We need to experiment on this}
+\paragraph{Homogeneous event cost.}
+When considering the execution time of a particular event, each event must be treated as an atomic and uniform operation, independently of the object receiver. \ab{maybe not... We need to experiment on this}
 
+\paragraph{Evolution over execution.} 
+More importance on variation than absolute number.
 
 \begin{tabular}{c|c|c}
 					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
@@ -321,9 +323,6 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 
 
 
-
-\paragraph{Evolution over execution.} 
-More importance on variation than absolute number.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
