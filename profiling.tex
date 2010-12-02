@@ -139,6 +139,7 @@
 	{\end{itemize}}
 
 \newcommand{\seclabel}[1]{\label{sec:#1}}
+\newcommand{\figref}[1]{\ref{fig:#1}}
 
 
 % D O C U M E N T
@@ -242,28 +243,33 @@ To meet clients requirements, Mondrian comprises a number of intertwined cache m
 \paragraph{Keeping track of the caches activations.}
 Each nodes has a number of caches. Activation of theses caches are under complex rules which depends on what is currently displayed, the nesting of nodes and their size. An improper implementation of the caches are a source of hard-to-track bugs and abnormal behavior.
 
-The following code excerpt monitor the 
+The following code excerpt monitors the cache activation in a Mondrian easel.
 
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left]
 | view allNodes |
-view := MOViewRenderer title: 'Debugging'.
-view interaction every: 1500 do: [ 
-		view root clear.
-		view shape rectangle
-						<b>if: #hasCachedForm fillColor: Color red</b>;
-						disableCache.
-		allNodes := <b>easel canvas root allNodes</b>.
-		view nodes: allNodes forEach: [:each |
-			<b>view nodes: each metricCaches</b>.
-			view gridLayout gapSize: 2.
-		].  
-		<b>view edges: allNodes from: #owner to: #yourself</b>.
-
-		view treeLayout.
-			
+view := MOViewRenderer new.
+view interaction every: 1500 do: [
+	view root clear.
+	view shape rectangle
+		<b>if: #hasCachedForm fillColor: Color red</b>.
+	allNodes := <b>easel canvas root allNodes</b>.
+	view nodes: allNodes forEach: [:each |
+		<b>view nodes: each metricCaches</b>.
+		view gridLayout gapSize: 2.
+	].  
+	<b>view edges: allNodes from: #owner to: #yourself</b>.
+	view treeLayout.
 	view root applyLayout. ].	
 view open.
 \end{lstlisting}
+
+The code opens a new Mondrian visualization that visualizes the rendering of the visualization given in an easel. The \emph{domain} that is profiled are the node obtained from the easel. Lines 7 and 12 shows this: nodes are acquired from the easel and the ownership is represented with edges. The \emph{domain is profiled} against two relevant properties. These are represented in Lines 6 and 9: a bitmap form and metrics may are separately cached. The \emph{profile presentation} is made via a Mondrian script. The \emph{evolution over execution} is realized via a periodical refresh, indicated in the script at Line 3.
+
+\fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
+
+The profile visualization is given in \figref{MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All the version of Mondrian are available online on \url{http://www.squeaksource.com/Mondrian.html}.}.
+
+
 
 \paragraph{Number of displayOn:}
 
