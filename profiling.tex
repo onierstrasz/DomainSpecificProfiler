@@ -1,6 +1,8 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \documentclass[runningheads]{llncs}
 
+\newcommand{\project}{{\sc MetaSpy}\xspace}
+
 % packages
 \usepackage{xspace}
 \usepackage{ifthen}
@@ -15,7 +17,7 @@
 \usepackage{bold-extra}
 
 % constants
-\newcommand{\Title}{Domain-Specific Profiling}
+\newcommand{\Title}{\project: Domain-Specific Profiling}
 \newcommand{\TitleShort}{\Title}
 \newcommand{\Authors}{Alexandre Bergel, Lukas Renggli}
 \newcommand{\AuthorsShort}{A. Bergel, L. Renggli}
@@ -59,7 +61,7 @@
 	breakautoindent=true,
 	columns=fullflexible,
 	showstringspaces=false,
-	basicstyle=\footnotesize\ttfamily,
+	basicstyle=\footnotesize\sffamily,
 	% background
 	frame=single,
     framerule=0pt,
@@ -138,6 +140,7 @@
 
 \newcommand{\seclabel}[1]{\label{sec:#1}}
 
+
 % D O C U M E N T
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \begin{document}
@@ -200,14 +203,18 @@ In many today's software there is a significant gap between the model offered by
 %:========
 \subsection{Domain Specific Profiler in a Nutshell}
 
-\paragraph{}
+\paragraph{Domain aware.}
  having the profiler aware of elements to be profiled, and not about their implementation
 
-\paragraph{}
+\paragraph{Profiling the domain.}
 perform profiling on the abstraction of the domain, not in the host language
 
-\paragraph{}
- assuming that each operation of the domain is constant in time
+\paragraph{Presentation.} Information obtained during a code execution profiling needs to be adequately presented to be exploitable. A graph (composed of nodes and edges) is a structure general enough to describe meta-models.
+
+The profiling information need to be mapped back to the profiled model. This implies that the presentation should provide enough information to be able to navigate between the profile to the model.
+
+\paragraph{Homogeneous operation cost.}
+When considering the execution time of a particular operation, each operation must be treated as an atomic and uniform operation, independently of the object receiver. \ab{maybe not... We need to experiment on this}
 
 
 \begin{tabular}{c|c|c}
@@ -223,32 +230,40 @@ perform profiling on the abstraction of the domain, not in the host language
 					&						& Mondrian
 \end{tabular}
 
+
 %:========
 \subsection{Case Study: Caches in Mondrian}
 
-\paragraph{Keeping track of the caches}
+Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}} is an open and agile visualization engine. 
+To meet clients requirements, Mondrian comprises a number of intertwined cache mechanisms. We applied \project to profile the activation of caches in Mondrian.
+
+\paragraph{Keeping track of the caches activations.}
+Each nodes has a number of caches. Activation of theses caches are under complex rules which depends on what is currently displayed, the nesting of nodes and their size. An improper implementation of the caches are a source of hard-to-track bugs and abnormal behavior.
+
+The following code excerpt monitor the 
 
 \begin{lstlisting}
-execute
-	| view allNodes |
-	view := MOViewRenderer title: 'Debugging'.
-	view interaction every: 1500 do: [ 
-			view root clear.
-			view shape rectangle
-							if: #hasCachedForm fillColor: Color red;
-							disableCache.
-			allNodes := easel canvas root allNodes.
-			view nodes: allNodes forEach: [:each |
-				view nodes: each metricCaches.
-				view gridLayout gapSize: 2.
-			].  
-			view edges: allNodes from: #owner to: #yourself.
+| view allNodes |
+view := MOViewRenderer title: 'Debugging'.
+view interaction every: 1500 do: [ 
+		view root clear.
+		view shape rectangle
+						<b>if: #hasCachedForm fillColor: Color red</b>;
+						disableCache.
+		allNodes := <b>easel canvas root allNodes</b>.
+		view nodes: allNodes forEach: [:each |
+			<b>view nodes: each metricCaches</b>.
+			view gridLayout gapSize: 2.
+		].  
+		<b>view edges: allNodes from: #owner to: #yourself</b>.
 
-			view treeLayout.
-					
-			view root applyLayout. ].	
-	view open.
+		view treeLayout.
+			
+	view root applyLayout. ].	
+view open.
 \end{lstlisting}
+
+\paragraph{Number of displayOn:}
 
 %:========
 \subsection{Case Study: Events in Omnibrowser}
@@ -296,13 +311,28 @@ Check of the parseOn: method.
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\section{Discussion}\seclabel{discussion}
+
+\paragraph{Getting the information.} 
+Depend on the application to be profiled. 
+Can use events if the application to be profiled has been accordingly designed. This is the case of Omnibrowser. 
+
+Can use bytecode instrumentation. But in that case, high level representation needs to be extracted by the programmer. A mapping has to be explicit. This is the case of PetitParser and Mondrian.
+
+
+
+
+\paragraph{Evolution over execution.} 
+More importance on variation than absolute number.
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
 Implemented with the Spy profiling framework
 
 %:========
-\subsection{Benchmark}
-
+\subsection{Benchmark}	
+	
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Conclusion}\seclabel{conclusion}
 
