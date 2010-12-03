@@ -201,28 +201,25 @@ In many today's software there is a significant gap between the model offered by
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-\section{Domain Specific Profiler}\seclabel{profiler}
+\section{Domain-Specific Profiler}\seclabel{profiler}
 
 %:========
-\subsection{Domain Specific Profiler in a Nutshell}
+\subsection{Properties of a Domain-Specific Profiler}
 
-\paragraph{Domain aware.}
- having the profiler aware of elements to be profiled, and not about their implementation
+\paragraph{Domain-Specific Collection.}
+ having the profiler aware of elements to be profiled, and not about their implementation. perform profiling on the abstraction of the domain, not in the host language
 
-\paragraph{Profiling the domain.}
-perform profiling on the abstraction of the domain, not in the host language
-
-\paragraph{Presentation.} Information obtained during a code execution profiling needs to be adequately presented to be exploitable. A graph (composed of nodes and edges) is a structure general enough to describe meta-models.
+\paragraph{Domain-Specific Presentation.} Information obtained during a code execution profiling needs to be adequately presented to be exploitable. A graph (composed of nodes and edges) is a structure general enough to describe meta-models.
 
 The profiling information need to be mapped back to the profiled model. This implies that the presentation should provide enough information to be able to navigate between the profile to the model.
 
 \paragraph{Homogeneous event cost.}
-When considering the execution time of a particular event, each event must be treated as an atomic and uniform operation, independently of the object receiver. \ab{maybe not... We need to experiment on this}
+When considering the execution time of a particular event, each event must be treated as an atomic and uniform operation, independently of the object receiver. \ab{maybe not... We need to experiment on this} \lr{I don't get it.} \lr{Maybe more ``Domain-Specific Evaluation'', \ie arguing that time-to-run, number of activations, ... does not make sense; we need domain-specific values like characters/second, refreshes/click, ...}
 
-\paragraph{Evolution over execution.} 
-More importance on variation than absolute number.
+\paragraph{Domain-Specific Evolution.} 
+More importance on variation than absolute number. \lr{How does the profile change over time?}
 
-\paragraph{Scope.} 
+\paragraph{Domain-Specific Scope.} 
 Dealing with circularity and meta-references is a common issue when a profiler is an instance of the model being profiled. To keep the model distinct from the profiler, a scoping mechanism has to be employed~\cite{Tant10a}.
 
 \begin{tabular}{c|c|c}
