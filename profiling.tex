@@ -311,23 +311,30 @@ Line 2 defines the domain of what has to be profiled, invocation of the {\sf \#d
 %:========
 \subsection{Case Study: Parsing Framework with PetitParser}
 
-\paragraph{Grammar coverage}
+PetitParser is a parsing framework combining ideas from scannerless parsing, parser combinators, parsing expression grammars and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically \cite{Reng10c}.
+
+Various people have implemented complex grammars for languages such as Java, Smalltalk, XML and SQL. Rigorous test suites try to ensure that each part of the grammar is covered by tests and well specified according to the respective language standards. Validating that each production and possible choice is covered by the tests is difficult. The traditional tools of the host language work on a method- or statement-level and thus cannot produce meaningful results in the context of PetitParser.
+
 \begin{lstlisting}
-	profile := PetitProfiler profile: [ PPSmalltalkGrammarTests suite run: TestResult new ] inPackage: 'PetitParser'.
-	parser := PPParserResource current parserAt: PPSmalltalkGrammar.
-	
+<b>PetitParserSpy>>setUp</b>
+	self model allParsers do: [ :parser |
+		self observeParser: parser in: self model do: [ :stream |
+			counter at: parser put: (counter at: parser ifAbsent: [ 0 ]) + 1 ] ]
+\end{lstlisting}
+
+\begin{lstlisting}
+<b>PetitParserSpy>>visualize</b>
+	| view |
 	view := MOViewRenderer new.
 	view shape rectangle 
-		size: [:p | ((profile numberOfActivationsFor: p) + 1) log * 10 ];
-		if: [:p | (profile numberOfActivationsFor: p) = 0] borderColor: Color red.
-	view nodes: parser allParsers.
+		size: [ :parser | ((counter at: parser ifAbsent: [ 0 ]) + 1) log * 10 ];
+		if: [ :parser | (counter at: parser ifAbsent: [ 0 ]) = 0 ] borderColor: Color red.
+	view nodes: self model allParsers.
 	view shape arrowedLine.
 	view edgesToAll: #children.
 	view treeLayout.
 	view open
 \end{lstlisting}
-
-Check of the parseOn: method. 
 
 
 
