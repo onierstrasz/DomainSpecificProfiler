@@ -314,7 +314,7 @@ Various people have implemented complex grammars for languages such as Java, Sma
 	view := MOViewRenderer new.
 	view shape rectangle 
 		size: [ :parser | ((counter at: parser ifAbsent: [ 0 ]) + 1) log * 10 ];
-		if: [ :parser | (counter at: parser ifAbsent: [ 0 ]) = 0 ] borderColor: Color red.
+		if: [ :parser | counter includesKey: parser ] borderColor: Color red.
 	view nodes: self model allParsers.
 	view shape arrowedLine.
 	view edgesToAll: #children.
