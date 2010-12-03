@@ -19,8 +19,8 @@
 % constants
 \newcommand{\Title}{\project: Domain-Specific Profiling}
 \newcommand{\TitleShort}{\Title}
-\newcommand{\Authors}{Alexandre Bergel, Lukas Renggli}
-\newcommand{\AuthorsShort}{A. Bergel, L. Renggli}
+\newcommand{\Authors}{Alexandre Bergel$^1$, Lukas Renggli$^1$, Jorge Ressia$^2$}
+\newcommand{\AuthorsShort}{A. Bergel, L. Renggli, J. Ressia}
 
 % references
 \usepackage[colorlinks]{hyperref}
@@ -116,6 +116,7 @@
 \newcommand{\rev}[2]{\nb{Reviewer #1}{red}{#2}}
 \newcommand{\ab}[1]{\nb{Alexandre}{blue}{#1}}
 \newcommand{\lr}[1]{\nb{Lukas}{orange}{#1}}
+\newcommand{\jr}[1]{\nb{Lukas}{green}{#1}}
 
 % graphics: \fig{position}{percentage-width}{filename}{caption}
 \DeclareGraphicsExtensions{.png,.jpg,.pdf,.eps,.gif}
@@ -154,8 +155,10 @@
 \author{\Authors} 
 \authorrunning{\AuthorsShort}
 
-\institute{PLEIAD Lab, Department of Computer Science (DCC),\\
-	University of Chile, Santiago, Chile}
+\institute{$^1$ PLEIAD Lab, Department of Computer Science (DCC),\\
+	University of Chile, Santiago, Chile\\\vspace{0.3cm}
+	$^2$ Software Composition Group,\\
+	University of Bern, Switzerland}
 
 \maketitle
 
@@ -219,6 +222,9 @@ When considering the execution time of a particular event, each event must be tr
 \paragraph{Evolution over execution.} 
 More importance on variation than absolute number.
 
+\paragraph{Scope.} 
+Dealing with circularity and meta-references is a common issue when a profiler is an instance of the model being profiled. To keep the model distinct from the profiler, a scoping mechanism has to be employed~\cite{Tant10a}.
+
 \begin{tabular}{c|c|c}
 					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
 					&						& 		\\
@@ -236,8 +242,8 @@ More importance on variation than absolute number.
 %:========
 \subsection{Case Study: Caches in Mondrian}
 
-Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}} is an open and agile visualization engine. 
-To meet clients requirements, Mondrian comprises a number of intertwined cache mechanisms. We applied \project to profile the activation of caches in Mondrian.
+Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}} is an open and agile visualization engine.
+To meet clients performance requirements, Mondrian comprises a number of intertwined cache mechanisms. We applied \project to profile the activation of caches in Mondrian.
 
 \paragraph{Keeping track of the caches activations.}
 Each nodes has a number of caches. Activation of theses caches are under complex rules which depends on what is currently displayed, the nesting of nodes and their size. An improper implementation of the caches are a source of hard-to-track bugs and abnormal behavior.
@@ -262,15 +268,23 @@ view interaction every: 1500 do: [
 view open.
 \end{lstlisting}
 
-The code opens a new Mondrian visualization that visualizes the rendering of the visualization given in an easel. The \emph{domain} that is profiled are the node obtained from the easel. Lines 7 and 12 shows this: nodes are acquired from the easel and the ownership is represented with edges. The \emph{domain is profiled} against two relevant properties. These are represented in Lines 6 and 9: a bitmap form and metrics may are separately cached. The \emph{profile presentation} is made via a Mondrian script. The \emph{evolution over execution} is realized via a periodical refresh, indicated in the script at Line 3.
+The code opens a new Mondrian visualization that visualizes the rendering of the visualization given in an easel. The \emph{domain} that is profiled are the node obtained from the easel. Lines 7 and 12 shows this: nodes are acquired from the easel and the ownership is represented with edges. The \emph{domain is profiled} against two relevant properties. These are represented in Lines 6 and 9: a bitmap form and metrics may are separately cached. The \emph{profile presentation} is made via a Mondrian script. The \emph{evolution over execution} is realized via a periodical refresh, indicated in the script at Line 3. The model being profiled and the profiler are represented with different objects in the host language. The \emph{scope} of the profiling is naturally given by operating on a different object.
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
 
-The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All the version of Mondrian are available online on \url{http://www.squeaksource.com/Mondrian.html}.}.
+The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All the versions of Mondrian are available online on \url{http://www.squeaksource.com/Mondrian.html}.}.
 
+\paragraph{Number of display:on:}
+A Mondrian visualization may comprise a great deal of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, only the elements that needs to be refreshed must effectively be. Elements that are outside the window or for which a bitmap form cache is active should not be refreshed. 
 
+A graphical element is refreshed when the method {\sf \#display:on:} is invoked. Monitoring when these invocations occur is key to have a global view of what get refreshed. Such a monitoring is realized via method instrumentation~\cite{Berg10d}. The instrumentation is realized via the method:
 
-\paragraph{Number of displayOn:}
+\begin{lstlisting}[numbers=left]
+MondrianProfilerMethod>>beforeRun: methodName with: listOfArguments in: receiver	((<b>methodName == #display:on:</b> ) 
+		and: [ <b>listOfArguments first model isNumber</b> ])			ifTrue: 				[ | v |				  v := listOfArguments first.				  counter at: v put: ((counter at: v ifAbsentPut: [ 0 ]) + 1 ) ]
+\end{lstlisting}
+
+Line 2 defines the domain of what has to be profiled, invocation of the {\sf \#display:on:} method. The scope of the profiling is restricted to element that are actually numbers, this is what our visualization under profiling is operating on. 
 
 %:========
 \subsection{Case Study: Events in Omnibrowser}
