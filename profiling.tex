@@ -322,16 +322,16 @@ A number of grammars have been implemented, including Java, Smalltalk, XML and S
 
 Rigorous test suites try to ensure that each part of the grammar is covered by tests and well specified according to the respective language standards. Validating that each production of the grammar is covered by the tests is a difficult activity. As mentioned previously, the traditional tools of the host language work on a method- and statement-level and thus cannot produce meaningful results in the context of PetitParser where the grammar is modeled as a graph of objects.
 
-With \project we can implement the grammar coverage with a few lines of code. The instrumentation happens at the level of the primitive parser objects.
+With \project we can implement the grammar coverage with a few lines of code. The instrumentation happens at the level of the primitive parser objects. The method \ct{observeParser:in:} wraps the parser object with a handler block that is called for each activation of the parser.
 
 \begin{lstlisting}[numbers=left]
 <b>PetitParserSpy>>setUp</b>
 	self grammar allParsers do: [ :parser |
-		self observeParser: parser in: self grammar do: [ :stream |
+		self observeParser: parser in: self grammar do: [
 			counter at: parser put: (counter at: parser ifAbsent: [ 0 ]) + 1 ] ]
 \end{lstlisting}
 
-Line~2 iterates over all primitive parser objects in the grammar. Line~3 and 4 attach an event handler to each of these parser objects that count the number of respective activations. This provides us with the necessary information to display the grammar coverage in a visualization.
+Line~2 iterates over all primitive parser objects in the grammar. Line~3 attaches the event handler on Line~4 to each parser in the model. The handler then counts the activations of each parser object when we run the test suite of the grammar. This provides us with the necessary information to display the grammar coverage in a visualization as seen in \autoref{fig:grammar-coverage}.
 
 \begin{figure}[h!tb]
 	\centering
@@ -339,7 +339,7 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 and 4 a
 	\hspace{0.1\textwidth}
 	\includegraphics[width=0.4\textwidth]{xml-covered}
 	\caption{Production coverage of an XML grammar with uncovered productions highlighted in black (left); and the same XML grammar with updated test coverage and complete production coverage (right). The size of the nodes is proportional to the number activations in the test case of this particular production.}
-	\label{fig:xml-coverage}
+	\label{fig:grammar-coverage}
 \end{figure}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
