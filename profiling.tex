@@ -17,10 +17,10 @@
 \usepackage{bold-extra}
 
 % constants
-\newcommand{\Title}{\project: Domain-Specific Profiling}
+\newcommand{\Title}{Domain-Specific Profiling}
 \newcommand{\TitleShort}{\Title}
 \newcommand{\Authors}{Alexandre Bergel$^1$, Lukas Renggli$^1$, Jorge Ressia$^2$}
-\newcommand{\AuthorsShort}{A. Bergel, L. Renggli, J. Ressia}
+\newcommand{\AuthorsShort}{Alexandre Bergel, Lukas Renggli, Jorge Ressia}
 
 % references
 \usepackage[colorlinks]{hyperref}
@@ -155,10 +155,10 @@
 \author{\Authors} 
 \authorrunning{\AuthorsShort}
 
-\institute{$^1$ PLEIAD Lab, Department of Computer Science (DCC),\\
-	University of Chile, Santiago, Chile\\\vspace{0.3cm}
-	$^2$ Software Composition Group,\\
-	University of Bern, Switzerland}
+\institute{$^1$ PLEIAD Lab, University of Chile, Santiago, Chile\\
+	\url{http://pleiad.dcc.uchile.cl/} \\[0.3cm]
+	$^2$ Software Composition Group, University of Bern, Switzerland\\
+	\url{http://scg.unibe.ch/}}
 
 \maketitle
 
@@ -337,7 +337,7 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
 	\includegraphics[width=0.4\textwidth]{xml-uncovered}
 	\hspace{0.1\textwidth}
 	\includegraphics[width=0.4\textwidth]{xml-covered}
-	\caption{Production coverage of an XML grammar with uncovered productions highlighted in black (left); and the same XML grammar with updated test coverage and complete production coverage (right). The size of the nodes is proportional to the number activations in the test case of this particular production.}
+	\caption{Production coverage of an XML grammar with uncovered productions highlighted in black (left); and the same XML grammar with updated test coverage and complete production coverage (right). The size of the nodes is proportional to the number of activations when running the test suite on the grammar.}
 	\label{fig:grammar-coverage}
 \end{figure}
 
