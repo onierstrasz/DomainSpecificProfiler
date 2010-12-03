@@ -14,4 +14,22 @@ Bergel, A., Robbes, R., Binder, W.:
   Models, Components, Patterns (TOOLS EUROPE'10), LNCS Springer Verlag (July
   2010) to appear.
 
+\bibitem{Tant10a}
+Tanter, {\'E}.:
+\newblock Execution levels for aspect-oriented programming.
+\newblock In: Proceedings of the 9th ACM International Conference on
+  Aspect-Oriented Software Development (AOSD 2010), Rennes and Saint Malo,
+  France, ACM Press (March 2010)  37--48 Best Paper Award.
+
+\bibitem{Berg10d}
+Bergel, A., nados, F.B., Robbes, R., R\"othlisberger, D.:
+\newblock Spy: A flexible code profiling framework.
+\newblock In: Smalltalks 2010. (2010) To appear.
+
+\bibitem{Reng10c}
+Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
+\newblock Practical dynamic grammars for dynamic languages.
+\newblock In: 4th Workshop on Dynamic Languages and Applications (DYLA 2010),
+  Malaga, Spain (June 2010)
+
 \end{thebibliography}
