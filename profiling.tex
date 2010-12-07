@@ -187,6 +187,10 @@ The remainder of this paper is structured as follows: \autoref{sec:problem} illu
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Problem}\seclabel{problem}
 
+PetitParser is a parsing framework combining ideas from scannerless parsing, parser combinators, parsing expression grammars and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically \cite{Reng10c}. PetitParser is designed to be fast: parsing a textual input is significantly faster than SmaCC, a widely used lalr parser implemented in Pharo.
+
+
+
 \subsection{Difficulty of profiling a specific domain}
 
 - Example with MessageTally
@@ -324,7 +328,6 @@ Line 2 defines the domain of what has to be profiled, invocation of the {\sf \#d
 %:========
 \subsection{Case Study: Parsing Framework with PetitParser}
 
-PetitParser is a parsing framework combining ideas from scannerless parsing, parser combinators, parsing expression grammars and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically \cite{Reng10c}.
 
 A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. As any piece of software code, duplication and unnecessary rules frequently appear in grammars. 
 
