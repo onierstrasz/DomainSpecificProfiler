@@ -201,7 +201,7 @@ This section illustrates two shortcomings of traditional profiling techniques wh
 
 \paragraph{CPU time profiling.}
 Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}}~\cite{Meye06a} is an open and agile visualization engine. 
-Mondrian uses a graph, made of possibly nested nodes and edges, to describe a visualization. Mondrian is used in more than a dozen of independent projects. To meet clients performance requirements, Mondrian's authors are paying a great attention to provide fast and scalable rendering. In June 2010 a serious performance issue was identified\footnote{\url{http://bit.ly/g8GjIh}} when visualizing an enriched dependency structural matrix~\cite{Lava09a}. Tracking down the cause of the poor performance was not a trivial task. We first have used MessageTally, the sample-based code profiled provided by Pharo.
+Mondrian uses a graph, made of possibly nested nodes and edges, to describe a visualization. Mondrian is a crucial component which is used in more than a dozen of independent projects. To meet clients performance requirements, Mondrian's authors are paying a great attention to provide fast and scalable rendering. In June 2010 a serious performance issue was identified\footnote{\url{http://bit.ly/g8GjIh}} when visualizing an enriched dependency structural matrix~\cite{Lava09a}. Tracking down the cause of the poor performance was not a trivial task. We first have used MessageTally, the sample-based code profiled provided by Pharo.
 
 Execution sampling approximates the time spent in an application's methods by periodically stopping a program and recording the current set of methods under executions. Such a profiling technique is relatively accurate since it has little impact on the overall execution.
 Beside MessageTally, execution sampling has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
@@ -224,7 +224,7 @@ MessageTally produces a textual output of in which method the interpreter spent 
 
 It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help pinpointing which nodes and edges are culprit of the time taken. Not all the graphical elements equally consume resources.
 
-MessageTally considers a method frame as the unit of the profiling information. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. An \emph{ad-hoc} associated for each element the number of time it has been refreshed. We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though no variation in the model were produced. 
+MessageTally considers a method frame as the unit of the profiling information. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. An \emph{ad-hoc} solution consists associating for each element the number of time it has been refreshed. We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though no variation in the model were produced. 
 This performance issue has been solved a few days after the complain via a quantification of the \ct{#displayOn:} invocation on each objects and metric computation.
  The information collected by MessageTally was not useful to solve the problem. 
 
@@ -235,6 +235,7 @@ A number of grammars have been implemented, including Java, Smalltalk, XML and S
 
 Beside the CPU consumption, sample-based profiling estimates the method coverage of an application: methods present in the call graph are covered by the referential input text. For example, the Java grammar is defined with 210 rules\footnote{\url{http://www.squeaksource.com/PetitJava.html}}.
 
+\ab{Add example}
 
 %:=========
 \subsection{Summary of the problem}
@@ -326,6 +327,7 @@ The code opens a new Mondrian visualization that visualizes the rendering of the
 
 The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All the versions of Mondrian are available online on \url{http://www.squeaksource.com/Mondrian.html}.}.
 
+
 \paragraph{Number of display:on:}
 A Mondrian visualization may comprise a great deal of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, only the elements that needs to be refreshed must effectively be. Elements that are outside the window or for which a bitmap form cache is active should not be refreshed. 
 
@@ -343,8 +345,15 @@ MondrianProfilerMethod>>beforeRun: methodName with: listOfArguments in: receiver
 
 Line 2 defines the domain of what has to be profiled, invocation of the {\sf \#display:on:} method. The scope of the profiling is restricted to element that are actually numbers, this is what our visualization under profiling is operating on. 
 
+\fig{}{.6}{MondrianProfiler}{Profiling Mondrian.}
+
+\autoref{fig:MondrianProfiler} gives a screenshot of the Mondrian profiler. The right hand side gives a ...
+
+
 %:========
 \subsection{Case Study: Events in Omnibrowser}
+
+
 
 \paragraph{Meta-model instantiation}
 \begin{lstlisting}
@@ -406,7 +415,7 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-Implemented with the Spy profiling framework
+Implemented with the MetaSpy profiling framework
 
 %:========
 \subsection{Benchmark}	
