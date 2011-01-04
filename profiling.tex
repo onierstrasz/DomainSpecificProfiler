@@ -230,16 +230,19 @@ MessageTally produces a textual output of in which method the interpreter spent 
 It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help pinpointing which nodes and edges are culprit of the time taken. Not all the graphical elements equally consume resources.
 
 MessageTally considers a method call frame as the unit of the profiling information. 
-Stack-based virtual machine stacks a method call frame at each message send. The large majority of execution sampling profilers center their information on such frames \jr{What does this mean?}\ab{Is this better? If yes, then remove these comments}. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. 
+Stack-based virtual machine stacks a method call frame at each message send. The large majority of execution sampling profilers center their information on such frames 
+%\jr{What does this mean?}\ab{Is this better? If yes, then remove these comments}. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. 
 %An \emph{ad-hoc} solution consists associating for each element the number of time it has been refreshed. 
 We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though no variation in the model were produced. 
 This performance issue has been solved a few days after the complain via a quantification of the \ct{#displayOn:} invocation on each objects and metric computation.
  The information collected by MessageTally was not useful to solve the problem. 
 
-\paragraph{Coverage.} \jr{rewrite, it is not clear what are we aiming here.} \ab{I worked on this section. Is this better? If yes, remove the comments}
+\paragraph{Coverage.} 
+%\jr{rewrite, it is not clear what are we aiming here.} \ab{I worked on this section. Is this better? If yes, remove the comments}
 PetitParser is a parsing framework combining ideas from scannerless parsing, parser combinators, parsing expression grammars and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically \cite{Reng10c}. %PetitParser is designed to be fast: parsing a textual input is significantly faster than SmaCC, a widely used lalr parser implemented in Pharo.
 
-A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. Grammars written in PetitParser may be large. As any piece of software code, duplication and unnecessary rules frequently appear in grammars. Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows:
+A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. Grammars written in PetitParser may be large. 
+\ugh{As any piece of software code, duplication and unnecessary rules frequently appear in grammars}. Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows:
 
 \begin{lstlisting}
 PPJavaSyntaxifStatement
@@ -331,7 +334,7 @@ The profiling information need to be mapped back to the profiled model. This imp
 %:========
 \subsection{The \project Framework}
 
-\jr{Explain the architecture.}
+\jr{We need a small explanation of this table.}
 
 \fig{}{1.2}{MetaSpy}{The \project framework.}
 
@@ -355,7 +358,7 @@ The profiling information need to be mapped back to the profiled model. This imp
 %:========
 \subsection{Case Study: Caches in Mondrian}
 
-\jr{Is this example related to the one in section 2? if yes how, we have to build the flow here otherwise is a bunch of separated examples.} \ab{Is this better now? If yes, remove these 2 comments}
+%\jr{Is this example related to the one in section 2? if yes how, we have to build the flow here otherwise is a bunch of separated examples.} \ab{Is this better now? If yes, remove these 2 comments}
 
 The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary graphical elements repaint. Theses two aspects were independently profiled.
 
@@ -388,7 +391,8 @@ view interaction every: 1500 do: [
 view open.
 \end{lstlisting}
 
-\jr{I do not understand how the profiling is working in the example, it is not clear.}\ab{Is this better now? If yes, then remove this comment} The code opens a new Mondrian visualization that visualizes the profiling of another visualization, given by an \ct{easel} object. The \emph{domain} that is profiled are the node obtained from the easel. Lines 7 and 12 shows this: nodes are acquired from the easel and the ownership is represented with edges. The \emph{domain is profiled} against two relevant properties. These are represented in Lines 6 and 9: a bitmap form and metrics may are separately cached. The \emph{profile presentation} is made via the Mondrian script given above. The \emph{evolution over execution} is realized via a periodical refresh, indicated in the script at Line 3. The model being profiled and the profiler are represented with different objects in the host language. The \emph{scope} of the profiling is naturally given by operating on a different object.
+%\jr{I do not understand how the profiling is working in the example, it is not clear.}\ab{Is this better now? If yes, then remove this comment}
+The code opens a new Mondrian visualization that visualizes the profiling of another visualization, given by an \ct{easel} object. The \emph{domain} that is profiled are the node obtained from the easel. Lines 7 and 12 shows this: nodes are acquired from the easel and the ownership is represented with edges. The \emph{domain is profiled} against two relevant properties. These are represented in Lines 6 and 9: a bitmap form and metrics may are separately cached. The \emph{profile presentation} is made via the Mondrian script given above. The \emph{evolution over execution} is realized via a periodical refresh, indicated in the script at Line 3. The model being profiled and the profiler are represented with different objects in the host language. The \emph{scope} of the profiling is naturally given by operating on a different object.
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
 
