@@ -307,7 +307,7 @@ It is important to emphasize that the limitations we identified are not particul
 %:========
 \subsection{Properties of a Domain-Specific Profiler}
 
-We identified four distinct properties that domain-specific profilers must fulfill in order to be effective:
+We identified four distinct properties that domain-specific profilers must fulfill to be effective:
 
 
 \paragraph{Domain identification.}
@@ -360,6 +360,8 @@ Some of the instrumentation strategies are:
 Profilers are responsible for modeling the domain-specific behavior to profile the main abstractions in the each domain.
 \ct{MetaSpy} class models the general behavior of any profiler. It is composed of a model which is being profiled and a list of active observer or instrumentation strategies.
 Each of the different profilers are called spies. They are activated when they are installed. The installation process for each spy is defined in the \ct{setUp} method.
+Each spy is responsible for its own presentation and this is modeled in the method \ct{visualize}.
+
 We will next show specific examples of various domain-specific profilers\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}.
 
 \begin{tabular}{c|c|c}
