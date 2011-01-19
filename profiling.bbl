@@ -1,0 +1,61 @@
+\begin{thebibliography}{1}
+
+\bibitem{Reng10b}
+Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
+\newblock Domain-specific program checking.
+\newblock In Vitek, J., ed.: Proceedings of the 48th International Conference
+  on Objects, Models, Components and Patterns (TOOLS'10). Volume 6141 of LNCS.,
+  Springer-Verlag (2010)  213--232
+
+\bibitem{Berg10c}
+Bergel, A., Robbes, R., Binder, W.:
+\newblock Visualizing dynamic metrics with profiling blueprints.
+\newblock In: Proceedings of the 48th International Conference on Objects,
+  Models, Components, Patterns (TOOLS EUROPE'10), LNCS Springer Verlag (July
+  2010) to appear.
+
+\bibitem{Meye06a}
+Meyer, M., G\^irba, T., Lungu, M.:
+\newblock Mondrian: An agile visualization framework.
+\newblock In: ACM Symposium on Software Visualization (SoftVis'06), New York,
+  NY, USA, ACM Press (2006)  135--144
+
+\bibitem{Reng10c}
+Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
+\newblock Practical dynamic grammars for dynamic languages.
+\newblock In: 4th Workshop on Dynamic Languages and Applications (DYLA 2010),
+  Malaga, Spain (June 2010)
+
+\bibitem{Gamm95a}
+Gamma, E., Helm, R., Johnson, R., Vlissides, J.:
+\newblock Design Patterns: Elements of Reusable Object-Oriented Software.
+\newblock Addison-Wesley Professional (1995)
+
+\bibitem{Lanz03d}
+Lanza, M., Ducasse, S.:
+\newblock Polymetric views---a lightweight visual approach to reverse
+  engineering.
+\newblock Transactions on Software Engineering (TSE) \textbf{29}(9) (September
+  2003)  782--795
+
+\bibitem{Berg08c}
+Bergel, A., Ducasse, S., Putney, C., Wuyts, R.:
+\newblock Creating sophisticated development tools with {OmniBrowser}.
+\newblock Journal of Computer Languages, Systems and Structures
+  \textbf{34}(2-3) (2008)  109--129
+
+\bibitem{Ress10a}
+Ressia, J., Renggli, L., G\^irba, T., Nierstrasz, O.:
+\newblock Run-time evolution through explicit meta-objects.
+\newblock In: Proceedings of the 5th Workshop on Models@run.time at the
+  ACM/IEEE 13th International Conference on Model Driven Engineering Languages
+  and Systems (MODELS 2010). (October 2010)
+
+\bibitem{Tant03a}
+Tanter, {\'E}., Noy\'e, J., Caromel, D., Cointe, P.:
+\newblock Partial behavioral reflection: Spatial and temporal selection of
+  reification.
+\newblock In: Proceedings of OOPSLA '03, ACM SIGPLAN Notices. (nov 2003)
+  27--46
+
+\end{thebibliography}

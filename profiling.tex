@@ -335,24 +335,25 @@ The profiling information need to be mapped back to the profiled model. This imp
 \fig{}{1.2}{MetaSpy}{The \project framework.}
 
 
-\project is a framework to easily build domain-specific profiler. 
+\project is a framework to easily build domain-specific profilers. 
 \autoref{fig:MondrianExample} shows a simplified class diagram of \project.
-There are two main abstractions: the instrumentation strategies and the domain-specific profilers.
+There are two main abstractions: the observers and the domain-specific profilers.
 
-An instrumentation strategy is responsible of adapting a domain-specific model and triggering specific actions when certain conditions are fulfilled.
-In essence, these strategies are very similar to the observer pattern~\cite{Gamm95a} however there is no list of observants.
-Fulfilling the specific condition of a instrumentation strategy will trigger the handler defined in that strategy.
-Installing a strategy activates the instrumentation and the generation of events, while uninstalling removes the instrumentation. 
+An observer is responsible of adapting a domain-specific model and triggering specific actions when certain conditions are fulfilled.
+These observer follow the observer pattern~\cite{Gamm95a} however there are no subscribers but the profilers.
+Fulfilling the specific condition of an observer will trigger the handler defined in that observer.
+Some observers work by mean of registering to already reified events. Others hook in the system by using meta-programming tricks, this is also known as instrumentation..
+Installing an observer activates the registration or instrumentation and the generation of events, while uninstalling removes the instrumentation. 
 
 
-Some of the instrumentation strategies are:
+Some of the observers are:
 \begin{description}
-	\item[Announcements.] An announcement models any type of event in a system. The announcement system is implemented as an observer pattern. This strategy allows us to trigger actions when an specific announcement is fired.
-	\item[Method.] This strategy provides a way of profiling when an specific method is sent to any instance of a class.
+	\item[Announcements.] An announcement models any type of event in a system. The announcement system is implemented as an observer pattern. This observer allows us to trigger actions when an specific announcement is signaled.
+	\item[Method.] This observer provides a way of profiling when an specific method is sent to any instance of a class.
 	\item[Parser.] The handler action is triggered for every reduction of the parser. \jr{this is wrong like hell, check with lukas.}
-	\item[Object Observer.] In class based object-oriented profilers it is really hard to break out of the class abstractions limitations. This strategy allow us to trigger action when a single instance of a class fulfills some condition. This is called object-specific profiling.
-	\item[Message Received.] This strategy models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
-	\item[Message Send.] This strategy models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
+	\item[Object.] In class based object-oriented profilers it is really hard to break out of the class abstractions limitations. This observer allow us to trigger action when a single instance of a class fulfills some condition. This is called object-specific profiling.
+	\item[Message Received.] This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
+	\item[Message Send.] This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
 	The message name, sender and receiver can be taken into account in the definition of the condition. 
 \end{description}
 
@@ -529,7 +530,27 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-Implemented with the MetaSpy profiling framework
+There are two ways of implementing the observers: registering the observer with preexistent event-based systems, and using the meta-level programming techniques of the host language.
+
+Object-specific instrumentation is hard to achieve in class-based languages like Smalltalk and Java. 
+Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on this constructs.
+Moreover, most languages provide a good level of structural reflection which deals with language structural elements like classes, method, statements, \etc
+But most languages do not provide a standard mechanism to reflect on the dynamic abstraction of the language.
+There are no abstractions for meta-events like a message send, a message receive, a state read, \etc.
+
+To solve these limitations we need to use a tool that enhance the reflective capabilities of a language.
+Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
+Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
+
+Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in the behavioral reifications. A behavioral meta-object reifying message send was used for the message send observer. As well as a behavioral meta-object for reifying message received. State read and write are also supported by behavioral meta-objects thus \project can profile this dynamic events.
+Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement,
+
+The design of Albedo can be understood as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex~\cite{Tant03a} model of \emph{Partial Behavioral Reflection}.
+Since Reflex was originally realized with Java, it is natural to ask how this approach would be implemented in a more static mainstream language like Java. 
+%The reason for choosing Pharo Smalltalk for implementing Albedo is that it more naturally supports \emph{unanticipated} use of reflection at run-time and supports an AST-based reflective code model.
+A Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.
+
+
 
 %:========
 \subsection{Benchmark}	
