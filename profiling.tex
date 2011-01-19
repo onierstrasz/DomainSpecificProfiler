@@ -336,7 +336,31 @@ The profiling information need to be mapped back to the profiled model. This imp
 \fig{}{1.2}{MetaSpy}{The \project framework.}
 
 
-\project is a framework to easily build domain specific profiler. 
+\project is a framework to easily build domain-specific profiler. 
+\autoref{fig:MondrianExample} shows a simplified class diagram of \project.
+There are two main abstractions: the instrumentation strategies and the domain-specific profilers.
+
+An instrumentation strategy is responsible of adapting a domain-specific model and triggering specific actions when certain conditions are fulfilled.
+In essence, these strategies are very similar to the observer pattern~\cite{Gamm95a} however there is no list of observants.
+Fulfilling the specific condition of a instrumentation strategy will trigger the handler defined in that strategy.
+Installing a strategy activates the instrumentation and the generation of events, while uninstalling removes the instrumentation. 
+
+
+Some of the instrumentation strategies are:
+\begin{description}
+	\item[Announcements.] An announcement models any type of event in a system. The announcement system is implemented as an observer pattern. This strategy allows us to trigger actions when an specific announcement is fired.
+	\item[Method.] This strategy provides a way of profiling when an specific method is sent to any instance of a class.
+	\item[Parser.] The handler action is triggered for every reduction of the parser. \jr{this is wrong like hell, check with lukas.}
+	\item[Object Observer.] In class based object-oriented profilers it is really hard to break out of the class abstractions limitations. This strategy allow us to trigger action when a single instance of a class fulfills some condition. This is called object-specific profiling.
+	\item[Message Received.] This strategy models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
+	\item[Message Send.] This strategy models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
+	The message name, sender and receiver can be taken into account in the definition of the condition. 
+\end{description}
+
+Profilers are responsible for modeling the domain-specific behavior to profile the main abstractions in the each domain.
+\ct{MetaSpy} class models the general behavior of any profiler. It is composed of a model which is being profiled and a list of active observer or instrumentation strategies.
+Each of the different profilers are called spies. They are activated when they are installed. The installation process for each spy is defined in the \ct{setUp} method.
+We will next show specific examples of various domain-specific profilers\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}.
 
 \begin{tabular}{c|c|c}
 					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
