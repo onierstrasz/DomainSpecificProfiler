@@ -515,7 +515,20 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-Implemented with the MetaSpy profiling framework
+Object-specific instrumentation is hard to achieve in class-based languages like Smalltalk and Java. 
+Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on this constructs.
+Moreover, most languages provide a good level of structural reflection which deals with language structural elements like classes, method, statements, \etc
+But most languages do not provide a standard mechanism to reflect on the dynamic abstraction of the language.
+There are no abstractions for meta-events like a message send, a message receive, a state read, \etc.
+
+To solve these limitations we need to use a tool that enhance the reflective capabilities of a language.
+Albedo~\cite{Ress10a} is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
+
+Albedo is a framework that offers fine-grained unanticipated dynamic structural and behavioral reflection. Instead of providing reflective capabilities as an external mechanism we integrate them deeply into the environment.
+
+By providing the possibility to associate multiple meta-objects to objects in the system, Albedo implements a \emph{homogeneous environment} of \emph{partial} and \emph{selective reification} that supports \emph{unanticipated changes}. Meta-objects provide a sound basis for building different coexisting \emph{meta-level architectures} and bring traditional object-oriented techniques to the meta-level. 
+
+Most languages provide incomplete reflective facilities generally as external mechanisms. We developed Albedo [RRGN10] to face these challenges. Albedo is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism we integrate them deeply in the environment. Modeling explicit meta-objects allows us to provide a range of reflective features and thereby evolve both application models and environments at run-time.
 
 %:========
 \subsection{Benchmark}	
