@@ -176,16 +176,12 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Introduction}\seclabel{introduction}
 
-\jr{We need an example or something else that justifies the story otherwise the intro does not make sense.} \ab{I agree on this. We started to write Section 1 before writing Section 2. I propose to write the introduction later on. We first need the content.}
-Profiling is the recording and analysis of a program execution. Profiling is often considered essential when one wants to obtain the  representation of a program execution.
+The advances of domain-specific language and modeling reveals a drastic change in the way software is being built. Models are becoming first class entities, and so, to better define software application domain. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a} to language checking and embedding tools~\cite{Reng10a}.
 
-- Specific domain are very present in today software development
+%Whereas domain specification and definition received a fair amount of attention from the research community, domain profiling and debugging remains largely under considered. 
+Whereas research on domain-specific languages made great progresses on language specification, implementation and verification, little has been done on profiling.
 
-- Whereas research on domain-specific languages made great progresses on language specification, implementation and verification, little has been done on profiling.
-
-- Comparison with previous work on domain-specific code checking \cite{Reng10b}.
-
-- Our approach to profiling \cite{Berg10c}. Our strategy to apply it to specific domains (maybe with figure).
+This paper gives the essential property an effective domain-specific profiler must meet. Note that we take a rather large definition of profiler by not solely focusing on a timely execution. In this paper, we consider profiling as the activity to record recording and analysis of a program execution. Profiling is often considered essential when one wants to obtain the representation of a program execution.
 
 The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of various real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
 
@@ -488,11 +484,18 @@ The important point of {\sf \#visualize} is to regularly update the visualizatio
 OmniBrowser~\cite{Berg08c} is a framework to define and compose new browsers : graphical list-oriented tools to navigate and edit elements from an arbitrary domain. In the OmniBrowser framework, a browser is described by a domain model that specifies the domain elements that can be navigated and edited, and a metagraph that spec- ifies the navigation between these domain elements. Nodes in the metagraph describe states the browser is in, while edges express navigation possibilities between those states. The OmniBrowser framework then dynamically composes widgets such as list menus and text panes to build an interactive browser that follows the navigation described in the metagraph.
 
 \begin{lstlisting}
-MSMetaSpy subclass: #MSOmniBrowserSpy	instanceVariableNames: 'actualCounter previousCounter'
+MSMetaSpy subclass: #MSOmniBrowserSpy
+	instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
 \begin{lstlisting}
-MSOmniBrowserSpy>>setUp	self 		observeAnnouncer: self model announcer		do: [ :ann | 			actualCounter				at: ann class				put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ]
+MSOmniBrowserSpy>>setUp
+	self 
+		observeAnnouncer: self model announcer
+		do: [ :ann | 
+			actualCounter
+				at: ann class
+				put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ]
 \end{lstlisting}
 
 \begin{lstlisting}
