@@ -430,33 +430,54 @@ A graphical element is rendered when the method {\sf \#display:on:} is invoked. 
 The \project framework is instantiated by creating a class {\sf MSMondrianSpy}, subclass of {\sf MSMetaSpy}.
 
 \begin{lstlisting}
-MSMetaSpy subclass: #MSMondrianSpy	instanceVariableNames: 'actualCounter previousCounter'
+MSMetaSpy subclass: #MSMondrianSpy
+	instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
 {\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of event and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshs.
 
 \begin{lstlisting}
-MSMondrianSpy>>initialize	super initialize.	actualCounter := IdentityDictionary new.	previousCounter := IdentityDictionary new
+MSMondrianSpy>>initialize
+	super initialize.
+	actualCounter := IdentityDictionary new.
+	previousCounter := IdentityDictionary new
 \end{lstlisting}
 
 The installation and instrumentation of Mondrian by \project is realized by the {\sf setUp} method:
 
 \begin{lstlisting}
-MSMondrianSpy>>setUp	self model root allNodes do: [ :node |		self 			observeObject: node			selector: #displayOn:			do: [ :receiver :selector :arguments |				actualCounter 					at: receiver					put: ((actualCounter at: receiver ifAbsentPut: [ 0 ]) + 1) ] ]
+MSMondrianSpy>>setUp
+	self model root allNodes do: [ :node |
+		self 
+			observeObject: node
+			selector: #displayOn:
+			do: [ :receiver :selector :arguments |
+				actualCounter 
+					at: receiver
+					put: ((actualCounter at: receiver ifAbsentPut: [ 0 ]) + 1) ] ]
 \end{lstlisting}
 
-All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument.
+All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument. This block updates the number of displays for each node of the visualization.
 
-
-\ab{Need to describe the following}
+The profiling of Mondrian is visualized using Mondrian itself. The following {\sf \#visualize} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
 \begin{lstlisting}
-MSMondrianSpy>>visualize	| view types |	view := MOViewRenderer title: 'Mondrian Spy'.	view interaction every: 250 do: [ 
+MSMondrianSpy>>visualize
+	| view types |
+	view := MOViewRenderer title: 'Profiler'.
+	view interaction every: 250 do: [ 
 	...
-	view nodes: self model root allNodes forEach: [ :each |		... ].	view verticalLineLayout.		view open.	view announcer on: WindowClosed do: [:ann | self uninstall ]
+	view nodes: self model root allNodes forEach: [ :each |
+		... ].
+	view verticalLineLayout.
+	
+	view open.
+	view announcer on: WindowClosed do: [:ann | self uninstall ]
 \end{lstlisting}
 
 \fig{}{.8}{MondrianProfiler}{Profiling the \emph{System Complexity} visualization.}
+
+The important point of {\sf \#visualize} is to regularly update the visualization, complying with the \emph{Profile evolution} property. The profiler is uninstalled when the profiler Mondrian visualization is closed.
 
 \autoref{fig:MondrianProfiler} gives a screenshot of a visualization and the profiler. The right-hand side is an example of the \emph{System Complexity} visualization~\cite{Lanz03d} of the collection class hierarchy in Pharo. The left hand side shows the profiler applied to the visualization. The horizontal bar indicates the amount of times the corresponding node has been displayed. %This visualization has been obtained by dragging and dropping the \ct{Collection} node
 
@@ -466,23 +487,34 @@ MSMondrianSpy>>visualize	| view types |	view := MOViewRenderer title: 'Mondria
 
 OmniBrowser~\cite{Berg08c} is a framework to define and compose new browsers : graphical list-oriented tools to navigate and edit elements from an arbitrary domain. In the OmniBrowser framework, a browser is described by a domain model that specifies the domain elements that can be navigated and edited, and a metagraph that spec- ifies the navigation between these domain elements. Nodes in the metagraph describe states the browser is in, while edges express navigation possibilities between those states. The OmniBrowser framework then dynamically composes widgets such as list menus and text panes to build an interactive browser that follows the navigation described in the metagraph.
 
-\paragraph{Meta-model instantiation}:
 \begin{lstlisting}
-	model := OBSystemBrowser onClass: Object selector: #printOn:.
-	profile := OmniProfiler 
-		profile: [ window :=  model open ]
-		inPackage: 'OmniBrowser'.
+MSMetaSpy subclass: #MSOmniBrowserSpy	instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
-\paragraph{Recording events}:
 \begin{lstlisting}
-	model := OBSystemBrowser onClass: Object.
-	actualCounter := Dictionary new.
-	previousCounter := Dictionary new.
-	model announcer
-		observe: OBAnnouncement
-		do: [ :ann | actualCounter at: ann class put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ].
+MSOmniBrowserSpy>>setUp	self 		observeAnnouncer: self model announcer		do: [ :ann | 			actualCounter				at: ann class				put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ]
 \end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%\paragraph{Meta-model instantiation}:
+%\begin{lstlisting}
+%	model := OBSystemBrowser onClass: Object selector: #printOn:.
+%	profile := OmniProfiler 
+%		profile: [ window :=  model open ]
+%		inPackage: 'OmniBrowser'.
+%\end{lstlisting}
+%
+%\paragraph{Recording events}:
+%\begin{lstlisting}
+%	model := OBSystemBrowser onClass: Object.
+%	actualCounter := Dictionary new.
+%	previousCounter := Dictionary new.
+%	model announcer
+%		observe: OBAnnouncement
+%		do: [ :ann | actualCounter at: ann class put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ].
+%\end{lstlisting}
 
 
 %:========
