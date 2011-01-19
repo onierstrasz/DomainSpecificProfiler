@@ -10,9 +10,9 @@ Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
 \bibitem{Berg10c}
 Bergel, A., Robbes, R., Binder, W.:
 \newblock Visualizing dynamic metrics with profiling blueprints.
-\newblock In Vitek, J., ed.: Objects, Models, Components, Patterns. Volume 6141
-  of Lecture Notes in Computer Science., Springer Berlin / Heidelberg (2010)
-  291--309
+\newblock In: Proceedings of the 48th International Conference on Objects,
+  Models, Components, Patterns (TOOLS EUROPE'10), LNCS Springer Verlag (July
+  2010) to appear.
 
 \bibitem{Meye06a}
 Meyer, M., G\^irba, T., Lungu, M.:
@@ -20,36 +20,23 @@ Meyer, M., G\^irba, T., Lungu, M.:
 \newblock In: ACM Symposium on Software Visualization (SoftVis'06), New York,
   NY, USA, ACM Press (2006)  135--144
 
-\bibitem{Lava09a}
-Laval, J., Denier, S., Ducasse, S., Bergel, A.:
-\newblock Identifying cycle causes with enriched dependency structural matrix.
-\newblock In: Proceedings of the 2009 16th Working Conference on Reverse
-  Engineering. WCRE '09, Washington, DC, USA, IEEE Computer Society (2009)
-  113--122
-
-\bibitem{Gupt92a}
-Gupta, A., Hwu, W.M.W.:
-\newblock Xprof: profiling the execution of x window programs.
-\newblock In: Proceedings of the 1992 ACM SIGMETRICS joint international
-  conference on Measurement and modeling of computer systems. SIGMETRICS
-  '92/PERFORMANCE '92, New York, NY, USA, ACM (1992)  253--254
-
 \bibitem{Reng10c}
 Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
 \newblock Practical dynamic grammars for dynamic languages.
 \newblock In: 4th Workshop on Dynamic Languages and Applications (DYLA 2010),
   Malaga, Spain (June 2010)
 
-\bibitem{Tant10a}
-Tanter, {\'E}.:
-\newblock Execution levels for aspect-oriented programming.
-\newblock In: Proceedings of the 9th ACM International Conference on
-  Aspect-Oriented Software Development (AOSD 2010), Rennes and Saint Malo,
-  France, ACM Press (March 2010)  37--48 Best Paper Award.
+\bibitem{Lanz03d}
+Lanza, M., Ducasse, S.:
+\newblock Polymetric views---a lightweight visual approach to reverse
+  engineering.
+\newblock Transactions on Software Engineering (TSE) \textbf{29}(9) (September
+  2003)  782--795
 
-\bibitem{Berg10d}
-Bergel, A., nados, F.B., Robbes, R., R\"othlisberger, D.:
-\newblock Spy: A flexible code profiling framework.
-\newblock In: Smalltalks 2010. (2010) To appear.
+\bibitem{Berg08c}
+Bergel, A., Ducasse, S., Putney, C., Wuyts, R.:
+\newblock Creating sophisticated development tools with {OmniBrowser}.
+\newblock Journal of Computer Languages, Systems and Structures
+  \textbf{34}(2-3) (2008)  109--129
 
 \end{thebibliography}
