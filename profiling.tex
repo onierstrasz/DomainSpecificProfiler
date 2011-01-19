@@ -336,24 +336,25 @@ The profiling information need to be mapped back to the profiled model. This imp
 \fig{}{1.2}{MetaSpy}{The \project framework.}
 
 
-\project is a framework to easily build domain-specific profiler. 
+\project is a framework to easily build domain-specific profilers. 
 \autoref{fig:MondrianExample} shows a simplified class diagram of \project.
-There are two main abstractions: the instrumentation strategies and the domain-specific profilers.
+There are two main abstractions: the observers and the domain-specific profilers.
 
-An instrumentation strategy is responsible of adapting a domain-specific model and triggering specific actions when certain conditions are fulfilled.
-In essence, these strategies are very similar to the observer pattern~\cite{Gamm95a} however there is no list of observants.
-Fulfilling the specific condition of a instrumentation strategy will trigger the handler defined in that strategy.
-Installing a strategy activates the instrumentation and the generation of events, while uninstalling removes the instrumentation. 
+An observer is responsible of adapting a domain-specific model and triggering specific actions when certain conditions are fulfilled.
+These observer follow the observer pattern~\cite{Gamm95a} however there are no subscribers but the profilers.
+Fulfilling the specific condition of an observer will trigger the handler defined in that observer.
+Some observers work by mean of registering to already reified events. Others hook in the system by using meta-programming tricks, this is also known as instrumentation..
+Installing an observer activates the registration or instrumentation and the generation of events, while uninstalling removes the instrumentation. 
 
 
-Some of the instrumentation strategies are:
+Some of the observers are:
 \begin{description}
-	\item[Announcements.] An announcement models any type of event in a system. The announcement system is implemented as an observer pattern. This strategy allows us to trigger actions when an specific announcement is fired.
-	\item[Method.] This strategy provides a way of profiling when an specific method is sent to any instance of a class.
+	\item[Announcements.] An announcement models any type of event in a system. The announcement system is implemented as an observer pattern. This observer allows us to trigger actions when an specific announcement is signaled.
+	\item[Method.] This observer provides a way of profiling when an specific method is sent to any instance of a class.
 	\item[Parser.] The handler action is triggered for every reduction of the parser. \jr{this is wrong like hell, check with lukas.}
-	\item[Object Observer.] In class based object-oriented profilers it is really hard to break out of the class abstractions limitations. This strategy allow us to trigger action when a single instance of a class fulfills some condition. This is called object-specific profiling.
-	\item[Message Received.] This strategy models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
-	\item[Message Send.] This strategy models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
+	\item[Object.] In class based object-oriented profilers it is really hard to break out of the class abstractions limitations. This observer allow us to trigger action when a single instance of a class fulfills some condition. This is called object-specific profiling.
+	\item[Message Received.] This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
+	\item[Message Send.] This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
 	The message name, sender and receiver can be taken into account in the definition of the condition. 
 \end{description}
 
