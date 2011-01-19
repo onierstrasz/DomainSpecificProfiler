@@ -241,8 +241,7 @@ This performance issue has been solved a few days after the complain via a quant
 %\jr{rewrite, it is not clear what are we aiming here.} \ab{I worked on this section. Is this better? If yes, remove the comments}
 PetitParser is a parsing framework combining ideas from scannerless parsing, parser combinators, parsing expression grammars and packrat parsers to model grammars and parsers as objects that can be reconfigured dynamically \cite{Reng10c}. %PetitParser is designed to be fast: parsing a textual input is significantly faster than SmaCC, a widely used lalr parser implemented in Pharo.
 
-A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. Grammars written in PetitParser may be large. 
-\ugh{As any piece of software code, duplication and unnecessary rules frequently appear in grammars}. Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows:
+A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. Grammars written in PetitParser may be large. As being the result of an engineering work, a grammar may contain unnecessary rules and duplication. Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows:
 
 \begin{lstlisting}
 PPJavaSyntaxifStatement
@@ -305,7 +304,7 @@ It is important to emphasize that the limitations we identified are not particul
 \section{Domain-Specific Profiler}\seclabel{profiler}
 
 %:========
-\subsection{Properties of a Domain-Specific Profiler}
+\subsection{Properties of a Domain-Specific Profiler} \label{fig:properties}
 
 We identified four distinct properties that domain-specific profilers must fulfill to be effective:
 
@@ -364,18 +363,18 @@ Each spy is responsible for its own presentation and this is modeled in the meth
 
 We will next show specific examples of various domain-specific profilers\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}.
 
-\begin{tabular}{c|c|c}
-					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
-					&						& 		\\
-\textbf{$M_0$ - Static}	&	classes, methods		& 		\\
-					&						& 		\\\hline
-					&						& Mondrian\\
-\textbf{$M_1$ - Dynamic}	&	method activation		& OB-metamodel\\
-					&						& Grammars\\ \hline
-					&						& OB Browser\\
-\textbf{$M_2$ -} 		&						& Visualization\\
-					&						& Mondrian
-\end{tabular}
+%\begin{tabular}{c|c|c}
+%					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
+%					&						& 		\\
+%\textbf{$M_0$ - Static}	&	classes, methods		& 		\\
+%					&						& 		\\\hline
+%					&						& Mondrian\\
+%\textbf{$M_1$ - Dynamic}	&	method activation		& OB-metamodel\\
+%					&						& Grammars\\ \hline
+%					&						& OB Browser\\
+%\textbf{$M_2$ -} 		&						& Visualization\\
+%					&						& Mondrian
+%\end{tabular}
 
 
 %:========
@@ -426,20 +425,36 @@ The profile visualization is given in \autoref{fig:MondrianExample}. The upper p
 A Mondrian visualization may comprise a great deal of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, only the elements that needs to be refreshed must effectively be. Elements that are outside the window or for which their nesting node has an active bitmap form cache should not be rendered. 
 
 A graphical element is rendered when the method {\sf \#display:on:} is invoked. Monitoring when these invocations occur is key to have a global view of what get refreshed. 
-%Such a monitoring is realized via \project. The instrumentation is realized via the method:
-%
-%\begin{lstlisting}[numbers=left]
-%MondrianProfilerMethod>>beforeRun: methodName with: listOfArguments in: receiver
-%	((<b>methodName == #display:on:</b> ) 
-%		and: [ <b>listOfArguments first model isNumber</b> ])
-%			ifTrue: 
-%				[ | v |
-%				  v := listOfArguments first.
-%				  counter at: v put: ((counter at: v ifAbsentPut: [ 0 ]) + 1 ) ]
-%\end{lstlisting}
-%
-%Line 2 defines the domain of what has to be profiled, invocation of the {\sf \#display:on:} method. The scope of the profiling is restricted to element that are actually numbers, this is what our visualization under profiling is operating on. 
-%
+
+The \project framework is instantiated by creating a class {\sf MSMondrianSpy}, subclass of {\sf MSMetaSpy}.
+
+\begin{lstlisting}
+MSMetaSpy subclass: #MSMondrianSpy	instanceVariableNames: 'actualCounter previousCounter'
+\end{lstlisting}
+
+{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of event and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshs.
+
+\begin{lstlisting}
+MSMondrianSpy>>initialize	super initialize.	actualCounter := IdentityDictionary new.	previousCounter := IdentityDictionary new
+\end{lstlisting}
+
+The installation and instrumentation of Mondrian by \project is realized by the {\sf setUp} method:
+
+\begin{lstlisting}
+MSMondrianSpy>>setUp	self model root allNodes do: [ :node |		self 			observeObject: node			selector: #displayOn:			do: [ :receiver :selector :arguments |				actualCounter 					at: receiver					put: ((actualCounter at: receiver ifAbsentPut: [ 0 ]) + 1) ] ]
+\end{lstlisting}
+
+All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument.
+
+
+\ab{Need to describe the following}
+
+\begin{lstlisting}
+MSMondrianSpy>>visualize	| view types |	view := MOViewRenderer title: 'Mondrian Spy'.	view interaction every: 250 do: [ 
+	...
+	view nodes: self model root allNodes forEach: [ :each |		... ].	view verticalLineLayout.		view open.	view announcer on: WindowClosed do: [:ann | self uninstall ]
+\end{lstlisting}
+
 \fig{}{.8}{MondrianProfiler}{Profiling the \emph{System Complexity} visualization.}
 
 \autoref{fig:MondrianProfiler} gives a screenshot of a visualization and the profiler. The right-hand side is an example of the \emph{System Complexity} visualization~\cite{Lanz03d} of the collection class hierarchy in Pharo. The left hand side shows the profiler applied to the visualization. The horizontal bar indicates the amount of times the corresponding node has been displayed. %This visualization has been obtained by dragging and dropping the \ct{Collection} node
@@ -448,7 +463,7 @@ A graphical element is rendered when the method {\sf \#display:on:} is invoked. 
 %:========
 \subsection{Case Study: Events in Omnibrowser}
 
-OmniBrowser is framework to easily build navigation tools~\cite{Berg08c}. 
+OmniBrowser~\cite{Berg08c} is a framework to define and compose new browsers : graphical list-oriented tools to navigate and edit elements from an arbitrary domain. In the OmniBrowser framework, a browser is described by a domain model that specifies the domain elements that can be navigated and edited, and a metagraph that spec- ifies the navigation between these domain elements. Nodes in the metagraph describe states the browser is in, while edges express navigation possibilities between those states. The OmniBrowser framework then dynamically composes widgets such as list menus and text panes to build an interactive browser that follows the navigation described in the metagraph.
 
 \paragraph{Meta-model instantiation}:
 \begin{lstlisting}
