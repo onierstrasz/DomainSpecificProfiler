@@ -393,7 +393,7 @@ The code opens a new Mondrian visualization that visualizes the profiling of ano
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
 
-The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All the versions of Mondrian are available online on \url{http://www.squeaksource.com/Mondrian.html}.}.
+The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All Mondrian versions are available online at \url{http://www.squeaksource.com/Mondrian.html}.}.
 
 
 \paragraph{Number of display:on:}
@@ -424,7 +424,7 @@ A graphical element is rendered when the method {\sf \#display:on:} is invoked. 
 
 OmniBrowser is framework to easily build navigation tools~\cite{Berg08c}. 
 
-\paragraph{Meta-model instantiation}
+\paragraph{Meta-model instantiation}:
 \begin{lstlisting}
 	model := OBSystemBrowser onClass: Object selector: #printOn:.
 	profile := OmniProfiler 
@@ -432,7 +432,7 @@ OmniBrowser is framework to easily build navigation tools~\cite{Berg08c}.
 		inPackage: 'OmniBrowser'.
 \end{lstlisting}
 
-\paragraph{Recording events}
+\paragraph{Recording events}:
 \begin{lstlisting}
 	model := OBSystemBrowser onClass: Object.
 	actualCounter := Dictionary new.
