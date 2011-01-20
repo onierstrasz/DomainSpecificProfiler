@@ -179,9 +179,14 @@
 The advances of domain-specific language and modeling reveals a drastic change in the way software is being built. Models are becoming first class entities, and so, to better define software application domain. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a} to language checking and embedding tools~\cite{Reng10a}.
 
 %Whereas domain specification and definition received a fair amount of attention from the research community, domain profiling and debugging remains largely under considered. 
-Whereas research on domain-specific languages made great progresses on language specification, implementation and verification, little has been done on profiling.
+Whereas research on domain-specific languages made consistent progress on language specification, implementation and verification, little has been done on profiling.
 
-This paper gives the essential property an effective domain-specific profiler must meet. Note that we take a rather large definition of profiler by not solely focusing on a timely execution. In this paper, we consider profiling as the activity to record recording and analysis of a program execution. Profiling is often considered essential when one wants to obtain the representation of a program execution.
+This paper gives the essential property an effective domain-specific profiler must meet. 
+It is important to notice that, as models are becoming first class entities, a profiler's measurement dimension cannot be solely limited to execution time.
+%Note that we take a rather large definition of profiler by not solely focusing on a timely execution. 
+We consider profiling as the activity \ugh{to record recording} \jr{is this correct Alex?} and analysis of a program execution. 
+Profiling is often considered essential when one wants to obtain the representation of a program execution. \jr{I do not know about this sentence, because it implies that there is no runtime we can analyze, which is not true. I think that we should say something like: Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.}
+Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.
 
 The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of various real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
 
