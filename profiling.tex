@@ -565,7 +565,48 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-There are two ways of implementing the observers: registering the observer with preexistent event-based systems, and using the meta-level programming techniques of the host language.
+There are two ways of implementing an observer: registering the observer with preexistent event-based systems, or using the meta-level programming techniques of the host language.
+
+Lets consider the Announcement Observer, whose responsibility is to observe the generation of specific announcements.
+
+\begin{lstlisting}[numbers=left]
+<b>AnnouncementObserver>>install</b>
+	self announcer 
+			on: Announcement 
+			send: #value: 
+			to: self handler
+\end{lstlisting}
+The method \ct{install} is responsible for installing the observer. In the previous snippet of code we can see that the observer is hook to the announcement system by evaluating the observer's handler when an announcement is triggered.
+
+However, not all profiling activities can rely in a preexistent mechanism for registering to events. Because of this, we need to rely on the meta-programming facilities of the host language.
+These facilities are not always uniform and require ad-hoc code to hook behavior in.
+To avoid this drawback we decided to use a framework that provides uniform meta-programming abstractions.
+Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
+Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
+
+
+%Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
+%Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
+
+Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in the behavioral reifications. A behavioral meta-object reifying message send was used for the message send observer. As well as a behavioral meta-object for reifying message received. State read and write are also supported by behavioral meta-objects thus \project can profile this dynamic events.
+Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement,
+
+Lets consider the Message Received Observer, whose responsibility is to observe when an specific object receives an specific message.
+
+\begin{lstlisting}[numbers=left]
+<b>MessageReceivedObserver>>install</b>
+	self observerMetaObject boundTo: self object
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=left]
+<b>MessageReceivedObserver>>setUp</b>
+	profilingMetaObject := BehaviorMetaObject new 
+								when: self selector 
+								isReceivedDo: self handler
+\end{lstlisting}
+The method \ct{install} binds a meta-object to the object to be observed.
+In The method \ct{setUp} initializes the profiling meta-object with a behavioral meta-object. 
+This meta-object will evaluate the handler when an specific message is received by the profiled object alone. This is called object-specific instrumentation.
 
 Object-specific instrumentation is hard to achieve in class-based languages like Smalltalk and Java. 
 Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on this constructs.
@@ -573,17 +614,10 @@ Moreover, most languages provide a good level of structural reflection which dea
 But most languages do not provide a standard mechanism to reflect on the dynamic abstraction of the language.
 There are no abstractions for meta-events like a message send, a message receive, a state read, \etc.
 
-To solve these limitations we need to use a tool that enhance the reflective capabilities of a language.
-Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
-Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
-
-Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in the behavioral reifications. A behavioral meta-object reifying message send was used for the message send observer. As well as a behavioral meta-object for reifying message received. State read and write are also supported by behavioral meta-objects thus \project can profile this dynamic events.
-Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement,
-
 The design of Albedo can be understood as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex~\cite{Tant03a} model of \emph{Partial Behavioral Reflection}.
-Since Reflex was originally realized with Java, it is natural to ask how this approach would be implemented in a more static mainstream language like Java. 
+Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
 %The reason for choosing Pharo Smalltalk for implementing Albedo is that it more naturally supports \emph{unanticipated} use of reflection at run-time and supports an AST-based reflective code model.
-A Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.
+However, a Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.
 
 
 
