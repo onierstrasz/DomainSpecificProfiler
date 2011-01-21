@@ -140,6 +140,7 @@
 	{\end{itemize}}
 
 \newcommand{\seclabel}[1]{\label{sec:#1}}
+\newcommand{\co}[1]{{\sf #1}}
 
 
 % D O C U M E N T
@@ -176,19 +177,19 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Introduction}\seclabel{introduction}
 
-The advances of domain-specific language and modeling reveals a drastic change in the way software is being built. Models are becoming first class entities, and so, to better define software application domain. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a} to language checking and embedding tools~\cite{Reng10a}.
+The advances of domain-specific language and modeling reveals a drastic change in the way software is being built. The need to better define software application domain favored metamodels to be considered as first class-entities. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a} and language checking and embedding tools~\cite{Reng10a}.
 
 %Whereas domain specification and definition received a fair amount of attention from the research community, domain profiling and debugging remains largely under considered. 
-Whereas research on domain-specific languages made consistent progress on language specification, implementation and verification, little has been done on profiling.
+Whereas research on domain-specific languages made consistent progress on language specification, implementation and verification, little has been done on profiling. \ab{We need to strengthen this paragraph with some references}
 
-This paper gives the essential property an effective domain-specific profiler must meet. 
-It is important to notice that, as models are becoming first class entities, a profiler's measurement dimension cannot be solely limited to execution time.
-%Note that we take a rather large definition of profiler by not solely focusing on a timely execution. 
-We consider profiling as the activity \ugh{to record recording} \jr{is this correct Alex?} and analysis of a program execution. 
-Profiling is often considered essential when one wants to obtain the representation of a program execution. \jr{I do not know about this sentence, because it implies that there is no runtime we can analyze, which is not true. I think that we should say something like: Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.}
-Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.
+This paper is about proposing a general solution for profiling specific domains. It gives the essential properties an effective domain-specific profiler must meet. It is important to notice that, as metamodels are becoming first class entities, a profiler's measurement dimension cannot be solely limited to execution time. We consider profiling as the activity to record and analyze a program execution. Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.
 
-The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of various real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
+The properties we identified a domain-specific profiler must be designed around are \emph{identifiable domain}, \emph{recordable domain events}, \emph{presentable} and \emph{evolvable}. By fulfilling these properties, a profiler will be able to be effective at identifying anomalies and sub-optimal configuration in the way a particular domain is treated.
+These properties are illustrated on 3 profilers for the domains: mondrian visualizations, Omnibrowser graph models and PetitParser grammars. These profilers were designed to assess the quality of the domain modeling. A number of bugs and issues have been identified and fixed.
+
+As a short illustration, consider the Mondrian visualization engine\footnote{Mondrian will be detailed in the coming section (\autoref{mondrian}).}. A visualization is described in terms of nodes and edges. One of the important performance and issues we recently faced is the refresh frequency: nodes and edges were simply refreshed too often\footnote{This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler gives) has not been useful. The domain, defined in terms of nodes and edges, used by Mondrian is completely ignored by standard code profiler since they can only consider classes, method and stack frame. This problem, and many more, have been successfully addressed with adequate domain-specific profilers.
+
+The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of several real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
 
 The remainder of this paper is structured as follows: \autoref{sec:problem} illustrates the problems of using a general-purpose profiler on code building on top of domain-specific language. \autoref{sec:profiler} introduces our approach to domain-specific profiling with three case-studies. \autoref{sec:implementation} presents our infrastructure to implement domain-specific profilers; and \autoref{sec:conclusion} summarizes the paper and discusses future work.
 
@@ -201,7 +202,7 @@ However, traditional profilers can hardly be used on a domain different than the
 
 
 %:=========
-\subsection{Difficulty of profiling a specific domain}
+\subsection{Difficulty of profiling a specific domain} \label{mondrian}
 
 This section illustrates two shortcomings of traditional profiling techniques when applied to a specific domain.\\
 
@@ -310,23 +311,23 @@ It is important to emphasize that the limitations we identified are not particul
 We identified four distinct properties that domain-specific profilers must fulfill to be effective:
 
 
-\paragraph{Domain identification.}
+\paragraph{Identifiable domain.}
 Elements that represent a domain of interest have to be retrieved from a current execution. Elements have to be identified independently of their implementation. These elements are usually expressed in terms of objets, accessible during the application execution. 
 
 Dealing with circularity and meta-references is a common issue when a profiler is an instance of the model being profiled. To keep the model distinct from the profiler, a scoping mechanism has to be employed~\cite{Tant10a}.
 
 
-\paragraph{Capturing domain events.} Relevant events generated by the domain have to be monitored and recorded to be analyzed during or after the execution. Events are expressed in terms of the method invocation, which expose four variables: a name, an object receiver, an object emitter and a list of arguments.
+\paragraph{Recordable domain events.} Relevant events generated by the domain have to be monitored and recorded to be analyzed during or after the execution. Events are expressed in terms of the method invocation, which expose four variables: a name, an object receiver, an object emitter and a list of arguments.
 
 
-\paragraph{Presentation.} Information obtained during a code execution profiling needs to be adequately presented to be exploitable. A graph (composed of nodes and edges) is a structure general enough to describe meta-models.
+\paragraph{Presentable.} Information obtained during a code execution profiling needs to be adequately presented to be exploitable. A graph (composed of nodes and edges) is a structure general enough to describe meta-models.
 
 The profiling information need to be mapped back to the profiled model. This implies that the presentation should provide enough information to be able to navigate between the profile to the model.
 
 %\paragraph{Homogeneous event cost.} When considering the execution time of a particular event, each event must be treated as an atomic and uniform operation, independently of the object receiver. \ab{maybe not... We need to experiment on this} \lr{I don't get it.} \lr{Maybe more ``Domain-Specific Evaluation'', \ie arguing that time-to-run, number of activations, ... does not make sense; we need domain-specific values like characters/second, refreshes/click, ...}
 
 
-\paragraph{Profile evolution.} Being able to see the evolution of the domain events over the time is valuable, especially when precisely analyzing the sequence of domain events is complex or not feasible. 
+\paragraph{Evolvable.} Being able to see the evolution of the domain events over the time is valuable, especially when precisely analyzing the sequence of domain events is complex or not feasible. 
 
 %:========
 \subsection{The \project Framework}
