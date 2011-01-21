@@ -385,58 +385,50 @@ We will next show specific examples of various domain-specific profilers\footnot
 
 %\jr{Is this example related to the one in section 2? if yes how, we have to build the flow here otherwise is a bunch of separated examples.} \ab{Is this better now? If yes, remove these 2 comments}
 
-The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary graphical elements repaint. Theses two aspects were independently profiled.
+The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary graphical elements repaint. Theses two aspects were independently addressed, using a dedicated profiler.
 
 \paragraph{Keeping track of the caches activations.}
-Each node has a number of caches. Activation of theses caches are under complex rules which depends on what is currently displayed, the nesting of nodes and their size. An improper implementation of the caches is a source of hard-to-track bugs and abnormal behavior.
-
-We will focus on two kinds of caches: 
+Each node has a number of caches. Activation of theses caches are under complex rules which depends on what is currently displayed, the nesting of nodes and their size. An improper implementation of the caches is a source of hard-to-track bugs and abnormal behavior. Mondrian offer two kind of caches:
 \begin{itemize}
-\item A node may nest other nodes and edges. The \emph{bitmap form cache} avoid to render inner nodes by snapshooting a bitmap of the nesting node.
-\item Each dimension of a graphical element is mapped to a metric. The \emph{metric cache} avoid having to recompute a metric at each rendering.
+\item A node may nest other nodes and edges. The \emph{bitmap form cache} avoid to render inner nodes by snapshooting a bitmap of the nesting node. Once the bitmap cache loaded, inner nodes are not rendered any further.
+\item The shape of a graphical element is the result of metric calculation on the model object represented by the element. Each dimension of a graphical element is mapped to a metric. The \emph{metric cache} avoid having to recompute the metrics at each rendering.
 \end{itemize}
 
-To monitor the activation and deactivation of these two caches, we built a dedicated profiler, called {\sc MondrianCacheProfiler}. The following Mondrian visualization describes the output of the profiler (Mondrian is both the object of the profile and the output medium):
+Keeping track of the activation and deactivation of theses two caches is realized with a dedicated profiler, called {\sc MondrianCacheActivation}. The profiler is implemented as a class \co{MSMondrianActivationCacheSpy}. The class inherits from \co{MSAbstractMondrianSpy}, which will be used for the second profiler.
+
+{\sc MondrianCacheActivation} is defined as follows:
 
 \begin{lstlisting}[numbers=left]
-| view allNodes |
-view := MOViewRenderer new.
-view interaction every: 1500 do: [
-	view root clear.
-	view shape rectangle
-		<b>if: #hasCachedForm fillColor: Color red</b>.
-	allNodes := <b>easel canvas root allNodes</b>.
-	view nodes: allNodes forEach: [:each |
-		<b>view nodes: each metricCaches</b>.
-		view gridLayout gapSize: 2.
-	].  
-	<b>view edges: allNodes from: #owner to: #yourself</b>.
-	view treeLayout.
-	view root applyLayout. ].	
-view open.
+<b>MSMetaSpy subclass: #MSAbstractMondrianSpy</b>
+	instanceVariableNames: 'nodes'
+	
+<b>MSAbstractMondrianSpy>>setUp</b>	super setUp.	nodes := self model root allNodes.
+	
+<b>MSAbstractMondrianSpy subclass: #MSMondrianCacheActivationSpy</b>
+
+<b>MSMondrianActivationCacheSpy>>visualizeOn: view</b>	view interaction every: 1500 do: [		view root clear.		view shape rectangle			if: #hasCachedForm fillColor: Color red.		view nodes: nodes forEach: [:each |			view nodes: each metricCaches.			view gridLayout gapSize: 2.		].  		view edges: nodes from: #owner to: #yourself.		view treeLayout.		view root applyLayout ]
 \end{lstlisting}
 
-%\jr{I do not understand how the profiling is working in the example, it is not clear.}\ab{Is this better now? If yes, then remove this comment}
-The code opens a new Mondrian visualization that visualizes the profiling of another visualization, given by an \ct{easel} object. The \emph{domain} that is profiled are the node obtained from the easel. Lines 7 and 12 shows this: nodes are acquired from the easel and the ownership is represented with edges. The \emph{domain is profiled} against two relevant properties. These are represented in Lines 6 and 9: a bitmap form and metrics may are separately cached. The \emph{profile presentation} is made via the Mondrian script given above. The \emph{evolution over execution} is realized via a periodical refresh, indicated in the script at Line 3. The model being profiled and the profiler are represented with different objects in the host language. The \emph{scope} of the profiling is naturally given by operating on a different object.
+The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled are the node. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
 
-The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profiling of it. Upper nodes are nesting nodes. The red color indicate that the bitmap form cache is activated, and inner nodes indicates a metric cache. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All Mondrian versions are available online at \url{http://www.squeaksource.com/Mondrian.html}.}.
+The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profile of it. Upper nodes are nesting nodes. The red color indicates that the bitmap form cache is activated, and inner nodes represent metric caches. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All Mondrian versions are available online at \url{http://www.squeaksource.com/Mondrian.html}.}.
 
 
-\paragraph{Number of display:on:}
+\paragraph{Number of \co{\#displayOn:} invocation.}
 A Mondrian visualization may comprise a great deal of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, only the elements that needs to be refreshed must effectively be. Elements that are outside the window or for which their nesting node has an active bitmap form cache should not be rendered. 
 
-A graphical element is rendered when the method {\sf \#display:on:} is invoked. Monitoring when these invocations occur is key to have a global view of what get refreshed. 
+A graphical element is rendered when the method \co{\#display:on:} is invoked. Monitoring when these invocations occur is key to have a global view of what get refreshed. 
 
-The \project framework is instantiated by creating a class {\sf MSMondrianSpy}, subclass of {\sf MSMetaSpy}.
+The \project framework is instantiated to create the {\sc MondrianDisplayOn} profiler, implemented with a class \co{\sf MSMondrianSpy}:
 
 \begin{lstlisting}
-MSMetaSpy subclass: #MSMondrianSpy
+MSAbstractMondrianSpy subclass: #MSMondrianDisplayOnSpy
 	instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
-{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of event and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshs.
+{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshs.
 
 \begin{lstlisting}
 MSMondrianSpy>>initialize
@@ -461,28 +453,25 @@ MSMondrianSpy>>setUp
 
 All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument. This block updates the number of displays for each node of the visualization.
 
-The profiling of Mondrian is visualized using Mondrian itself. The following {\sf \#visualize} method describes the visualization given in \autoref{fig:MondrianProfiler}.
+The profiling of Mondrian is visualized using Mondrian itself. The following \co{\#visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
 \begin{lstlisting}
-MSMondrianSpy>>visualize
-	| view types |
-	view := MOViewRenderer title: 'Profiler'.
+MSMondrianSpy>>visualizeOn: view
 	view interaction every: 250 do: [ 
 	...
 	view nodes: self model root allNodes forEach: [ :each |
 		... ].
-	view verticalLineLayout.
-	
-	view open.
+	view verticalLineLayout.	
 	view announcer on: WindowClosed do: [:ann | self uninstall ]
 \end{lstlisting}
 
 \fig{}{.8}{MondrianProfiler}{Profiling the \emph{System Complexity} visualization.}
 
-The important point of {\sf \#visualize} is to regularly update the visualization, complying with the \emph{Profile evolution} property. The profiler is uninstalled when the profiler Mondrian visualization is closed.
+One important point of \co{\#visualizeOn:} is to regularly update the visualization, complying with the \emph{Profile evolution} property. The profiler is uninstalled when the profiler Mondrian visualization is closed.
 
 \autoref{fig:MondrianProfiler} gives a screenshot of a visualization and the profiler. The right-hand side is an example of the \emph{System Complexity} visualization~\cite{Lanz03d} of the collection class hierarchy in Pharo. The left hand side shows the profiler applied to the visualization. The horizontal bar indicates the amount of times the corresponding node has been displayed. %This visualization has been obtained by dragging and dropping the \ct{Collection} node
 
+This visualization helps identifying unnecessary render of graphical element. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
 
 %:========
 \subsection{Case Study: Events in Omnibrowser}
@@ -571,9 +560,11 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-There are two ways of implementing an observer: registering the observer with preexistent event-based systems, or using the meta-level programming techniques of the host language.
+The implementation \project heavily relies on observers. Popularized by the Observer Design Pattern~\cite{Gamm95a}, an observer is a particular object that gets notified of any state change. The design pattern is implemented in the application to be observed. Our case is slightly different since applications can not always be prepared for an eventual profiling since a programmer cannot reliably predict which part of the software will have to be profiled in the future. This constraint significantly raises the complexity of implementing \project. 
 
-Lets consider the Announcement Observer, whose responsibility is to observe the generation of specific announcements.
+In our situation, there are essentially two ways of implementing an observer: registering the observer with preexistent event-based systems, or using the meta-level programming techniques of the host language.
+
+Lets consider the class \co{AnnouncementObserver}, whose responsibility is to observe the generation of specific announcements.
 
 \begin{lstlisting}[numbers=left]
 <b>AnnouncementObserver>>install</b>
@@ -582,20 +573,21 @@ Lets consider the Announcement Observer, whose responsibility is to observe the 
 			send: #value: 
 			to: self handler
 \end{lstlisting}
-The method \ct{install} is responsible for installing the observer. In the previous snippet of code we can see that the observer is hook to the announcement system by evaluating the observer's handler when an announcement is triggered.
+
+As its names says, the \co{install} method installs an observer object on the domain specified in the \co{install} method (described below). In the previous snippet of code we can see that the observer is hooked into the announcement system by evaluating the observer's handler when an announcement is triggered.
 
 However, not all profiling activities can rely in a preexistent mechanism for registering to events. Because of this, we need to rely on the meta-programming facilities of the host language.
 These facilities are not always uniform and require ad-hoc code to hook behavior in.
 To avoid this drawback we decided to use a framework that provides uniform meta-programming abstractions.
 Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
-Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
+Albedo is a reflective system based on explicit meta-objects to improve meta-level engineering.
 
 
 %Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
 %Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
 
-Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in the behavioral reifications. A behavioral meta-object reifying message send was used for the message send observer. As well as a behavioral meta-object for reifying message received. State read and write are also supported by behavioral meta-objects thus \project can profile this dynamic events.
-Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement,
+Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in the behavioral reifications. A behavioral meta-object reifying message send was used for the message send observer. As well as a behavioral meta-object for reifying received message. State read and write are also supported by behavioral meta-objects thus \project can profile this dynamic events.
+Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement.
 
 Lets consider the Message Received Observer, whose responsibility is to observe when an specific object receives an specific message.
 
@@ -611,17 +603,17 @@ Lets consider the Message Received Observer, whose responsibility is to observe 
 								isReceivedDo: self handler
 \end{lstlisting}
 The method \ct{install} binds a meta-object to the object to be observed.
-In The method \ct{setUp} initializes the profiling meta-object with a behavioral meta-object. 
-This meta-object will evaluate the handler when an specific message is received by the profiled object alone. This is called object-specific instrumentation.
+The method \ct{setUp} initializes the profiling meta-object with a behavioral meta-object. 
+This meta-object evaluates the handler when a specific message is received by the profiled object. This mechanism is termed \emph{object-specific instrumentation}.
 
-Object-specific instrumentation is hard to achieve in class-based languages like Smalltalk and Java. 
+Object-specific instrumentation is not trivial to achieve in class-based languages like Smalltalk and Java \ab{without a significant overhead? AspectJ has a perObject keyword I think}. 
 Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on this constructs.
 Moreover, most languages provide a good level of structural reflection which deals with language structural elements like classes, method, statements, \etc
 But most languages do not provide a standard mechanism to reflect on the dynamic abstraction of the language.
 There are no abstractions for meta-events like a message send, a message receive, a state read, \etc.
 
-The design of Albedo can be understood as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex~\cite{Tant03a} model of \emph{Partial Behavioral Reflection}.
-Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
+Albedo has been designed as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex~\cite{Tant03a}.
+\ab{is the following important? I would comment out all the remaining}Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
 %The reason for choosing Pharo Smalltalk for implementing Albedo is that it more naturally supports \emph{unanticipated} use of reflection at run-time and supports an AST-based reflective code model.
 However, a Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.
 
