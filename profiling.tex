@@ -402,11 +402,25 @@ Keeping track of the activation and deactivation of theses two caches is realize
 <b>MSMetaSpy subclass: #MSAbstractMondrianSpy</b>
 	instanceVariableNames: 'nodes'
 	
-<b>MSAbstractMondrianSpy>>setUp</b>	super setUp.	nodes := self model root allNodes.
+<b>MSAbstractMondrianSpy>>setUp</b>
+	super setUp.
+	nodes := self model root allNodes.
 	
 <b>MSAbstractMondrianSpy subclass: #MSMondrianCacheActivationSpy</b>
 
-<b>MSMondrianActivationCacheSpy>>visualizeOn: view</b>	view interaction every: 1500 do: [		view root clear.		view shape rectangle			if: #hasCachedForm fillColor: Color red.		view nodes: nodes forEach: [:each |			view nodes: each metricCaches.			view gridLayout gapSize: 2.		].  		view edges: nodes from: #owner to: #yourself.		view treeLayout.		view root applyLayout ]
+<b>MSMondrianActivationCacheSpy>>visualizeOn: view</b>
+	view interaction every: 1500 do: [
+		view root clear.
+		view shape rectangle
+			if: #hasCachedForm fillColor: Color red.
+
+		view nodes: nodes forEach: [:each |
+			view nodes: each metricCaches.
+			view gridLayout gapSize: 2.
+		].  
+		view edges: nodes from: #owner to: #yourself.
+		view treeLayout.
+		view root applyLayout ]
 \end{lstlisting}
 
 The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled are the node. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
@@ -560,9 +574,17 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-The implementation \project heavily relies on observers. Popularized by the Observer Design Pattern~\cite{Gamm95a}, an observer is a particular object that gets notified of any state change. The design pattern is implemented in the application to be observed. Our case is slightly different since applications can not always be prepared for an eventual profiling since a programmer cannot reliably predict which part of the software will have to be profiled in the future. This constraint significantly raises the complexity of implementing \project. 
+\jr{the first paragraph does not make sense, change it.}
+The implementation \project heavily relies on observers (Observer Design Pattern~\cite{Gamm95a}). 
+%The Observer Design Pattern~\cite{Gamm95a} defines an observer is a particular object that gets notified of any state change. 
+The design pattern is implemented in the application to be observed. 
+The observer pattern relies on the application to generate the required notifications, however in our case we cannot anticipate which event should be triggered and where and when this should happen.
+This constraint significantly raises the complexity of implementing \project.
 
-In our situation, there are essentially two ways of implementing an observer: registering the observer with preexistent event-based systems, or using the meta-level programming techniques of the host language.
+% However, our case is slightly different since applications can not always be prepared for an eventual profiling since a programmer cannot reliably predict which part of the software will have to be profiled in the future. 
+% This constraint significantly raises the complexity of implementing \project. 
+
+In our situation, there are essentially two ways of implementing an observer: registering the observer to preexistent event-based systems, or using the meta-level programming techniques of the host language.
 
 Lets consider the class \co{AnnouncementObserver}, whose responsibility is to observe the generation of specific announcements.
 
@@ -574,7 +596,7 @@ Lets consider the class \co{AnnouncementObserver}, whose responsibility is to ob
 			to: self handler
 \end{lstlisting}
 
-As its names says, the \co{install} method installs an observer object on the domain specified in the \co{install} method (described below). In the previous snippet of code we can see that the observer is hooked into the announcement system by evaluating the observer's handler when an announcement is triggered.
+The \co{install} method installs an observer object on the domain specified in the \co{install} method. In the previous snippet of code we can see that the observer is hooked into the announcement system by evaluating the observer's handler when an announcement is triggered.
 
 However, not all profiling activities can rely in a preexistent mechanism for registering to events. Because of this, we need to rely on the meta-programming facilities of the host language.
 These facilities are not always uniform and require ad-hoc code to hook behavior in.
@@ -621,19 +643,38 @@ However, a Java solution would be more static in nature: it would not be possibl
 
 %:========
 \subsection{Benchmark}	
+
+Profiling always impact the performance of the application being analyze. 
+We have performed a micro-benchmark to assess the maximal performance impact of \project. 
+We assume that the behavior required to fulfill the profiling requirements is constant to any observer technique.
+\project has two mechanism to observe and application: to registering the observer to preexistent event-based systems, or using the meta-level programming techniques of the host language.
+
+We analyze the impact of \project on both profiling uses cases. All benchmarks were performed on an Apple MacBook Pro, 2.16 GHz Intel Core Duo in Pharo~1.1.1 with the jitted Cog VM. 
+%To avoid possible execution artifacts disturbing the benchmark we ensure that the involved reflective and jitted methods are created in advance and that method lookup caches are filled.
+
+\jr{here we need to show two uses cases one for registration and the other for reflection.}
+
+\jr{I do not know if we really have to say something about this here.}
+This micro-benchmark shows that reflection on a runtime system can have a significant performance impact. However, for real-world application with only few reifications the performance impact is significantly lower. Albedo's meta-objects provide a way of adapting selected objects thus allowing reflection to be applied within a fine-grained scope only. This provides a natural way of controlling the performance impact of reflective changes.
+
 	
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Conclusion}\seclabel{conclusion}
 
+\jr{The first paragraph does not make sense to me, what is the idea?}
 This problem is rather well generalized. For example, profiling a virtual machine is a particularly difficult activity, since instead of providing information about bytecode and primitive executions, the virtual machine talks about functions executions\footnote{\url{http://www.mirandabanda.org/cogblog/2008/12/30/the-idee-fixe-and-the-perfected-profiler/}}.
 
-\jr{Complete and fix}
+Our case studies have shown the need for domain-specific profiler. 
+We have identified the properties a domain-specific profiler must have.
+We have presented \project, a prototype for building domain-specific profiler following those properties.
+
+\jr{What else can we say? Future work?}
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section*{Acknowledgments}
 
-\small We gratefully thanks ...
+\small We gratefully acknowledge the financial support of the Swiss National Science Foundation for the project ``Synchronizing Models and Code" (SNF Project No.\ 200020-131827, Oct.\ 2010 -- Sept.\ 2012).
 
 % bibliography
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
