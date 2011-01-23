@@ -171,7 +171,7 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \begin{abstract}
-	Domain-specific languages and models are increasingly used within general-purpose host languages. While traditional profiling tools perform well on host language code itself, they often fail to provide meaningful results if the developers start to internal domain-specific languages. In this paper we motivate the need of dedicated profiling tools with three different case-studies. Furthermore, we present an infrastructure that enables developers to quickly prototype new profilers for their domain-specific languages and models.
+	Domain-specific languages and models are increasingly used within general-purpose host languages. While traditional profiling tools perform well on host language code itself, they often fail to provide meaningful results \ugh{if the developers start to internal domain-specific languages}. In this paper we motivate the need of dedicated profiling tools with three different case-studies. Furthermore, we present an infrastructure that enables developers to quickly prototype new profilers for their domain-specific languages and models.
 \end{abstract}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -237,7 +237,7 @@ The large majority of execution sampling profilers centers their information on 
 %\jr{What does this mean?}\ab{Is this better? If yes, then remove these comments}. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. 
 %An \emph{ad-hoc} solution consists associating for each element the number of time it has been refreshed. 
 We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though \chg{no variation in the model were produced}{the model did not change}. 
-\lr{Not understandable:} \ugh{This performance issue has been solved a few days after the complain via a quantification of the \ct{#displayOn:} invocation on each objects and metric computation.}
+\lr{Not understandable:} \ugh{This performance issue has been solved a few days after the complain via a quantification of the displayOn: invocation on each objects and metric computation.}
 \lr{Not convincing:} The information collected by MessageTally was not useful to solve the problem. \lr{Why?} \lr{You haven't told at all how you found the problem!}
 
 \lr{The Mondrian example is not convincing at all. I don't see why a detected profiler provides more useful information than the standard MessageTally. I think PetitParser would be a better example, because here in the MessageTally you truly don't see anything. And the Coverage is an extension to that.}
@@ -339,7 +339,7 @@ The profiling information need to be mapped back to the profiled model. This imp
 %:========
 \subsection{The \project Framework}
 
-\jr{We need a small explanation of this table.} 
+\jr{There was a table here, it was removed, what was the idea behind it?} 
 
 \fig{}{1.2}{MetaSpy}{The \project framework.}
 
@@ -348,21 +348,21 @@ The profiling information need to be mapped back to the profiled model. This imp
 \autoref{fig:MondrianExample} shows a simplified class diagram of \project.
 There are two main abstractions: the observers and the domain-specific profilers.
 
-An observer is responsible of adapting a domain-specific model and triggering specific actions when certain \chg{conditions are fulfilled}{events} happen.
-These observers follow the observer pattern~\cite{Gamm95a} however there are no subscribers but the profilers \lr{do not understand!}.
-Fulfilling the specific \chg{condition}{but these are not conditions that are constantly checked, these are events being triggered from the model} of an observer will trigger the handler defined in that observer.
+An observer is responsible of adapting a domain-specific model and triggering specific actions when certain events happen.
+These observers follow the observer pattern~\cite{Gamm95a} and the profilers are the subscribers.
+%Fulfilling the specific but these are not conditions that are constantly checked, these are events being triggered from the model} of an observer will trigger the handler defined in that observer.
 Some observers work by mean of registering to existing hooks. Other observers intercept the system using meta-programming, this is also known as instrumentation.
 Installing an observer activates the observer and the collection of events, while uninstalling removes the observer. 
 
 
 Some of the observers are:
 \begin{description}
-	\item[Announcement Observer.] \chg{An announcement models any type of event in a system. The announcement system is implemented as an observer pattern. This observer allows us to trigger actions when an specific announcement is signaled.}{Announcements provide a flexible framework for event handling. The announcement observer allows to hook into applications using this infrastructure and to dispatch them to the profiler.}
-	\item[Method Observer.] This observer provides a way of \ugh{profiling} when an specific method is invoked.
-	\item[Object Observer.] \ugh{In class based object-oriented profilers it is really hard to break out of the class abstractions limitations.} This observer allow us to trigger action when a single instance of a class fulfills some condition. This is called object-specific profiling.
-	\item[Parser Observer.] The parser observers triggers an event whenever a specific production is activated.	
-	\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
-	\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
+	\item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer allows to hook into applications using this infrastructure and to dispatch them to the profiler.
+	\item[Method Observer.] This observer listen to the event when an specific method is invoked for any instance of a class.
+	\item[Object Observer.] This observer allow us to trigger event for a single instance of a class. This is called object-specific profiling. Some examples of event a single instance can trigger are: message send, message receive, state read and state write.
+	\item[Parser Observer.] The parser observers triggers an event whenever a specific production is activated.
+	%\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
+	%\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
 	The message name, sender and receiver can be taken into account in the definition of the condition. 
 \end{description}
 
