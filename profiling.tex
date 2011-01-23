@@ -601,7 +601,7 @@ In our situation, there are essentially two ways of implementing an observer: re
 
 Lets consider the class \co{AnnouncementObserver}, whose responsibility is to observe the generation of specific announcements.
 
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 <b>AnnouncementObserver>>install</b>
 	self announcer 
 			on: Announcement 
@@ -628,12 +628,12 @@ Lets consider the Message Received Observer, whose responsibility is to observe 
 
 \lr{I would only put numbers if you refer to them}
 
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 <b>MessageReceivedObserver>>install</b>
 	self observerMetaObject boundTo: self object
 \end{lstlisting}
 
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 <b>MessageReceivedObserver>>setUp</b>
 	profilingMetaObject := BehaviorMetaObject new 
 								when: self selector 
