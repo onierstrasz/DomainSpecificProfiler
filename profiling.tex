@@ -177,6 +177,31 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Introduction}\seclabel{introduction}
 
+\jr{We need to argument something like this:}
+
+I don't remember why with mondrian the traditional profiler fails, but with PP the argumentation for the intro could go as follows:
+
+- pp uses the interpreter/command pattern, thus "logical" execution happens on an abstraction level not exposed to profilers
+
+- the primitive entity of execution is a parser object, not a bytecode/messge send as a tradition profiler would analyze
+
+- similar coverage is only meaningful on parser objects, not on host language source code
+
+What we want:
+
+- instead of bytecodes we have primitive/atomic parsers
+
+- instead of method invokations we have grammar productions composed of parsers.
+
+- now "messagetally" -> "prodctiontally" and "byecodetally" -> "pasertally" gives a meaning to developers (maybe note here that this is for grammar developers, the developers of PP do still use traditional tools).
+
+- coverage needs to be displayed in terms of parsers/productions
+
+- high level info needs to be mapped back to models (or the code that creates these models)
+
+\jr{end}
+
+
 The advances of domain-specific languages and models reveals a drastic change in the way software is being built. \lr{do not understand:} The need to better define software application domain favored metamodels to be considered as first class-entities. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a} and language checking \lr{What is `language checking'? There is only `program checking'} and embedding tools~\cite{Reng10a} \lr{The ECOOP paper does not talk about `program checking', only \cite{Reng10b}}.
 
 %Whereas domain specification and definition received a fair amount of attention from the research community, domain profiling and debugging remains largely under considered. 
@@ -256,7 +281,7 @@ A number of grammars have been implemented, including Java, Smalltalk, XML and S
 
 % \lr{uhh, this doesn't tell me anything:} This parsing rule is the combination of parsers combined with the message named comma (\ct{,}).
 
-Beside the CPU consumption, sample-based profiling estimates the method coverage of an application: methods present in the call graph are covered by the referential input text. For example, the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser is defined with 210 rules. These rules are modeled with a graph a objects. Whereas MessageTally is relatively efficient in \ugh{estimating the coverage of source code} \lr{what????}, it is of a little help when applied to a graph of parsers, a domain other than classes and methods.
+Beside the CPU consumption, sample-based profiling estimates the method coverage of an application: methods present in the call graph are covered by the referential input text. For example, the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser is defined with 210 rules. These rules are modeled \ugh{with a graph a objects}. Whereas MessageTally is relatively efficient in \ugh{estimating the coverage of source code} \lr{what????}, it is of a little help when applied to a graph of parsers, a domain other than classes and methods.
 
 \lr{I don't see how MessageTally has anything to do with Coverage?}
 
@@ -586,18 +611,18 @@ Can use bytecode instrumentation. But in that case, high level representation ne
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
-\jr{the first paragraph does not make sense, change it.}
-\lr{that was already said}
-The implementation \project heavily relies on observers (Observer Design Pattern~\cite{Gamm95a}). 
-%The Observer Design Pattern~\cite{Gamm95a} defines an observer is a particular object that gets notified of any state change. 
-The design pattern is implemented in the application to be observed. 
-The observer pattern relies on the application to generate the required notifications, however in our case we cannot anticipate which event should be triggered and where and when this should happen.
-This constraint significantly raises the complexity of implementing \project.
+%\jr{the first paragraph does not make sense, change it.}
+%\lr{that was already said}
+% The implementation \project heavily relies on observers (Observer Design Pattern~\cite{Gamm95a}). 
+% %The Observer Design Pattern~\cite{Gamm95a} defines an observer is a particular object that gets notified of any state change. 
+% The design pattern is implemented in the application to be observed. 
+% The observer pattern relies on the application to generate the required notifications, however in our case we cannot anticipate which event should be triggered and where and when this should happen.
+% This constraint significantly raises the complexity of implementing \project.
 
 % However, our case is slightly different since applications can not always be prepared for an eventual profiling since a programmer cannot reliably predict which part of the software will have to be profiled in the future. 
 % This constraint significantly raises the complexity of implementing \project. 
 
-In our situation, there are essentially two ways of implementing an observer: registering the observer to preexistent event-based systems, or using the meta-level programming techniques of the host language.
+\project has two ways of implementing an observer: registering the observer to preexistent event-based systems, or using the meta-level programming techniques of the host language.
 
 Lets consider the class \co{AnnouncementObserver}, whose responsibility is to observe the generation of specific announcements.
 
