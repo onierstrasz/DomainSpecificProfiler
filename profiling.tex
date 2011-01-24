@@ -204,10 +204,10 @@
 
 The advances of domain-specific languages and models reveals a drastic change in the way software is being built. 
 %\lr{do not understand:} The need to better define software application domain favored metamodels to be considered as first class-entities. 
-The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a} and language checking \lr{What is `language checking'? There is only `program checking'} and embedding tools~\cite{Reng10a} \lr{The ECOOP paper does not talk about `program checking', only \cite{Reng10b}}. \jr{@Lukas can you fix this, I do not fully understand your comment.}
+The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a} and program checking and embedding tools~\cite{Reng10b}.
 
 %Whereas domain specification and definition received a fair amount of attention from the research community, domain profiling and debugging remains largely under considered. 
-While research on domain-specific languages made consistent progress on language specification \cite{Deur00a}, implementation and verification, little has been done on profiling. \ab{We need to strengthen this paragraph with some references}
+While research on domain-specific languages made consistent progress on language specification \cite{Deur00a}, implementation and verification, little has been done on profiling. %\ab{We need to strengthen this paragraph with some references}
 We consider profiling as the activity to record and analyze a program execution. Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.
 Common code profilers employ executing sampling as the way to cheaply obtain dynamic information. 
 Unfortunately, information extracted when regularly sampling the method call stack cannot be used to profile a domain other than source code model.
@@ -245,10 +245,7 @@ This section illustrates two shortcomings of traditional profiling techniques wh
 \paragraph{CPU time profiling.}
 Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}}~\cite{Meye06a} is an open and agile visualization engine. 
 Mondrian uses a graph, made of (possibly nested) nodes and edges, to describe a visualization. 
-%Mondrian is a crucial component which is used in more than a dozen independent projects. 
-%To meet clients performance requirements, Mondrian's authors are paying \ugh{a great} attention to provide fast and scalable rendering. 
 In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh}} when performing a visualization.
-%\lr{that has nothing to do with our paper:} visualizing an enriched dependency structural matrix~\cite{Lava09a}. 
 Tracking down the cause of the poor performance was not trivial. We first used the sample-based code profiled provided by Pharo\footnote{\url{http://pharo-project.org/}}.
 
 Execution sampling approximates the time spent in an application's methods by periodically stopping a program and recording the current set of methods under executions. Such a profiling technique is relatively accurate since it has little impact on the overall execution.
@@ -272,16 +269,10 @@ The profiler produces a textual output, we next show an except of it:
 
 It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help pinpointing which nodes and edges are culprit of the time taken. Not all the graphical elements equally consume resources.
 
-%MessageTally considers a method call frame as the unit of the profiling information. 
-%\lr{No, that has absolutely nothing to do with stack-based VMs. What you want to discuss here is if the programming language has an execution stack, which most today's programming languages (Prolog and early versions of Fortran are the only exceptions that come in my mind).}
-Most programming languages have an structure which models the execution stack.
-The large majority of execution sampling profilers centers their information on the frames of the execution stack.
-%\jr{What does this mean?}\ab{Is this better? If yes, then remove these comments}. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. 
-%An \emph{ad-hoc} solution consists associating for each element the number of time it has been refreshed. 
-\jr{@Alex I think that here we should have some gluing sentence that explain how stack based profilers like MessageTally were not useful. Then this two parts in the paragraph will flow better. Just one or two sentences will be enough. Maybe saying how you found the problem at the end might help to contrast to MessageTally data.}
-We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though the model did not change. 
-This performance issue has been solved a few days after the complain via a quantification of the displayOn: invocation on each objects and metric computation.
-The information collected by MessageTally was not useful to solve the problem. 
+Traditional execution sampling profilers centers their information on the frames of the execution stack and completely ignore the identify of the object that received the method call and its arguments. As a consequence, it is hard to track down what are the object culprit of the slowness. On the example above, MessageTally says that we spent 30.9\% in \ct{MONode>>displayOn} without saying which node was actually refreshed too often.
+\jr{@Alex I think that here we should have some gluing sentence that explain how stack based profilers like MessageTally were not useful. Then this two parts in the paragraph will flow better. Just one or two sentences will be enough. Maybe saying how you found the problem at the end might help to contrast to MessageTally data.}\ab{Is this better?}
+%We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though the model did not change. 
+%This performance issue has been solved a few days after the complain via a quantification of the displayOn: invocation on each objects and metric computation. The information collected by MessageTally was not useful to solve the problem. 
 
 %\lr{The Mondrian example is not convincing at all. I don't see why a detected profiler provides more useful information than the standard MessageTally. I think PetitParser would be a better example, because here in the MessageTally you truly don't see anything. And the Coverage is an extension to that.}
 
@@ -332,7 +323,7 @@ When in need of analyzing the parsing and production coverage of the Java Gramma
 %:=========
 \subsection{Requirements for domain-specific profilers}
 
-The two example given above are representative. They illustrate the gap between a particular domain and the source code model. We argue that to efficiently profile an arbitrary domain, the following requirements needs to be fulfilled:
+The two examples given above are representative. They illustrate the gap between a particular domain and the source code model. We argue that to efficiently profile an arbitrary domain, the following requirements needs to be fulfilled:
 
 \begin{itemize}
 \item \emph{Specifying the domain.} Since we are concerned with what makes up a visualization in Mondrian, we are interested in the different nodes and the invocation of the \ct{displayOn:} methods, instead of focusing on the implementation classes. 
@@ -347,9 +338,9 @@ Whereas the class \ct{MOGraphElement} and its subclasses total more than 263 met
  During the execution of the application, relevant changes and actions triggered by the domain have to be monitored and recorded. Monitoring too many events generates noise and distraction. 
  
 \item \emph{Effectively and concisely presents the necessary information.} 
-The information collected by traditional profilers is textual targeting method invocation. A method that invokes another will be located below it and indented. Moreover each method frame represented has a class name and a method name, which completely ignores the identity of the object and arguments that are part of the call.
+The information collected by traditional profilers is textual and targets method invocation. A method that invokes another will be located below it and indented. Moreover each method frame represented has a class name and a method name, which completely ignores the identity of the object and arguments that are part of the call.
 
-Collected information have to be presented in a fashion so that the important metrics and domain object composition are on the foreground.  
+Collected information have to be presented in such a way that the important metrics and domain object composition are on the foreground.  
 
 %\item The evolution of the profile over time.
 \end{itemize}
@@ -365,9 +356,9 @@ Common code profilers employ executing sampling as the way to cheaply obtain dyn
 %:========
 \subsection{Properties of a Domain-Specific Profiler} \label{fig:properties}
 
-\jr{@Alex @Lukas I think that these are the solutions that we provide to solve the requirements previously mentioned. So I would suggest removing these points from here and stressing them in the approach and in the use cases.}
+\jr{@Alex @Lukas I think that these are the solutions that we provide to solve the requirements previously mentioned. So I would suggest removing these points from here and stressing them in the approach and in the use cases.} \ab{Strange, I feel that the flow is okay}
 
-We identified four distinct properties that domain-specific profilers must fulfill to be effective:
+We identified five distinct properties that domain-specific profilers must fulfill to be effective:
 
 
 \paragraph{Identifiable domain.}
@@ -375,6 +366,7 @@ Elements that represent a domain of interest have to be retrieved from a current
 
 Dealing with circularity and meta-references is a common issue when a profiler is an instance of the model being profiled. To keep the model distinct from the profiler, a scoping mechanism has to be employed~\cite{Tant10a}.
 
+\paragraph{domain specific metrics.} \ab{We need to compute some metrics, else no much can be done}
 
 \paragraph{Recordable domain events.} Relevant events generated by the domain have to be monitored and recorded to be analyzed during or after the execution. Events are expressed in terms of the method invocation, which expose four variables: a name \lr{huuu?}, an object receiver, an object emitter \lr{wtf is that? a pulsar?} and a list of arguments.
 
@@ -394,12 +386,14 @@ The profiling information need to be mapped back to the profiled model. This imp
 \subsection{The \project Framework}
 
 \jr{There was a table here, it was removed, what was the idea behind it?} 
+\ab{I am not sure it is worth mentioning the table. We essentially say it when formulating the problem.}
 
-\fig{}{1.2}{MetaSpy}{The \project framework.}
+\ab{I feel there is more to say about \project}
 
+\fig{}{1}{MetaSpy}{The \project framework.}
 
 \project is a framework to easily build domain-specific profilers. 
-\autoref{fig:MondrianExample} shows a simplified class diagram of \project.
+\autoref{fig:MetaSpy} shows a simplified class diagram of \project.
 There are two main abstractions: the observers and the domain-specific profilers.
 
 An observer is responsible of adapting a domain-specific model and triggering specific actions when certain events happen.
@@ -412,8 +406,8 @@ Installing an observer activates the observer and the collection of events, whil
 Some of the observers are:
 \begin{description}
 	\item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer allows to hook into applications using this infrastructure and to dispatch them to the profiler.
-	\item[Method Observer.] This observer listen to the event when an specific method is invoked for any instance of a class.
-	\item[Object Observer.] This observer allow us to trigger event for a single instance of a class. This is called object-specific profiling. Some examples of event a single instance can trigger are: message send, message receive, state read and state write.
+	\item[Method Observer.] This observer listens to the event when an specific method is invoked for any instance of a class.
+	\item[Object Observer.] This observer allows us to trigger event for a single instance of a class. This is called object-specific profiling. Some examples of event a single instance can trigger are: message send, message receive, state read and state write.
 	\item[Parser Observer.] The parser observers triggers an event whenever a specific production is activated.
 	%\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
 	%\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
@@ -484,7 +478,7 @@ Keeping track of the activation and deactivation of theses two caches is realize
 		view root applyLayout ]
 \end{lstlisting}
 
-\lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}
+\lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}
 
 The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled are the node. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
 
