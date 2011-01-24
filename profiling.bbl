@@ -15,6 +15,18 @@ Renggli, L., G\^irba, T., Nierstrasz, O.:
   Conference on Object-Oriented Programming. Volume 6183 of LNCS.,
   Springer-Verlag (2010)  380--404
 
+\bibitem{Reng10b}
+Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
+\newblock Domain-specific program checking.
+\newblock In Vitek, J., ed.: Proceedings of the 48th International Conference
+  on Objects, Models, Components and Patterns (TOOLS'10). Volume 6141 of LNCS.,
+  Springer-Verlag (2010)  213--232
+
+\bibitem{Deur00a}
+Deursen, A., Klint, P., Visser, J.:
+\newblock Domain-specific languages: An annotated bibliography.
+\newblock ACM SIGPLAN Notices \textbf{35}(6) (June 2000)  26--36
+
 \bibitem{Meye06a}
 Meyer, M., G\^irba, T., Lungu, M.:
 \newblock Mondrian: An agile visualization framework.
