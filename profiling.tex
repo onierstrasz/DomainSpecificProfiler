@@ -223,7 +223,8 @@ The remainder of this paper is structured as follows: \autoref{sec:problem} illu
 
 Current application profilers are useful to gather runtime data (\eg method invocations, method coverage, call trees, memory consumption) from the static code model offered by the programming language (\eg packages, classes, methods, statements). This is an effective approach when the low-level source code has to be profiled.
 
-However, traditional profilers are hardly useful on a domain different than the code model. In many today's software there is a significant gap between the model offered by the execution platform and the model of the actually running application. The proliferation of meta-models and domain-specific languages builds new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
+However, traditional profilers are hardly useful on a domain different than the code model. In many today's software there is a significant gap between the model offered by the execution platform and the model of the actually running application. 
+\jr{we have to clarify this sentence:} The proliferation of meta-models and domain-specific languages builds new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
 
 
 %:=========
@@ -233,12 +234,16 @@ This section illustrates two shortcomings of traditional profiling techniques wh
 
 \paragraph{CPU time profiling.}
 Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}}~\cite{Meye06a} is an open and agile visualization engine. 
-Mondrian uses a graph, made of (possibly nested) nodes and edges, to describe a visualization. Mondrian is a crucial component which is used in more than a dozen independent projects. To meet clients performance requirements, Mondrian's authors are paying \ugh{a great} attention to provide fast and scalable rendering. In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh}} when \lr{that has nothing to do with our paper:} visualizing an enriched dependency structural matrix~\cite{Lava09a}. Tracking down the cause of the poor performance was not trivial. We first used \lr{is it necessary to know that this is called MessageTally? This is just a normal sampling profiler.} MessageTally, the sample-based code profiled provided by Pharo\footnote{\url{http://pharo-project.org/}}.
+Mondrian uses a graph, made of (possibly nested) nodes and edges, to describe a visualization. 
+%Mondrian is a crucial component which is used in more than a dozen independent projects. 
+%To meet clients performance requirements, Mondrian's authors are paying \ugh{a great} attention to provide fast and scalable rendering. 
+In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh}} when \lr{that has nothing to do with our paper:} visualizing an enriched dependency structural matrix~\cite{Lava09a}. 
+Tracking down the cause of the poor performance was not trivial. We first used the sample-based code profiled provided by Pharo\footnote{\url{http://pharo-project.org/}}.
 
 Execution sampling approximates the time spent in an application's methods by periodically stopping a program and recording the current set of methods under executions. Such a profiling technique is relatively accurate since it has little impact on the overall execution.
-Beside MessageTally, execution sampling has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
+Beside Smalltalk profiler execution sampling has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
 
-MessageTally produces a textual output \ugh{of in which method the interpreter spent some time when rendering the visualization}. \chg{In our example the output is:}{An except of the output is:}
+The profiler produces a textual output, we next show an except of it:
 
 \begin{lstlisting}
 54.8% {11501ms} MOCanvas>>drawOn: 
@@ -256,16 +261,17 @@ MessageTally produces a textual output \ugh{of in which method the interpreter s
 
 It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help pinpointing which nodes and edges are culprit of the time taken. Not all the graphical elements equally consume resources.
 
-MessageTally considers a method call frame as the unit of the profiling information. 
-\lr{No, that has absolutely nothing to do with stack-based VMs. What you want to discuss here is if the programming language has an execution stack, which most today's programming languages (Prolog and early versions of Fortran are the only exceptions that come in my mind).}
+%MessageTally considers a method call frame as the unit of the profiling information. 
+%\lr{No, that has absolutely nothing to do with stack-based VMs. What you want to discuss here is if the programming language has an execution stack, which most today's programming languages (Prolog and early versions of Fortran are the only exceptions that come in my mind).}
+Most programming languages have an structure which models the execution stack.
 The large majority of execution sampling profilers centers their information on the frames of the execution stack.
 %\jr{What does this mean?}\ab{Is this better? If yes, then remove these comments}. Unfortunately, this has little benefit in explaining the cause of the experienced slowdown. 
 %An \emph{ad-hoc} solution consists associating for each element the number of time it has been refreshed. 
-We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though \chg{no variation in the model were produced}{the model did not change}. 
+We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though the model did not change. 
 \lr{Not understandable:} \ugh{This performance issue has been solved a few days after the complain via a quantification of the displayOn: invocation on each objects and metric computation.}
 \lr{Not convincing:} The information collected by MessageTally was not useful to solve the problem. \lr{Why?} \lr{You haven't told at all how you found the problem!}
 
-\lr{The Mondrian example is not convincing at all. I don't see why a detected profiler provides more useful information than the standard MessageTally. I think PetitParser would be a better example, because here in the MessageTally you truly don't see anything. And the Coverage is an extension to that.}
+%\lr{The Mondrian example is not convincing at all. I don't see why a detected profiler provides more useful information than the standard MessageTally. I think PetitParser would be a better example, because here in the MessageTally you truly don't see anything. And the Coverage is an extension to that.}
 
 \paragraph{Coverage.} 
 %\jr{rewrite, it is not clear what are we aiming here.} \ab{I worked on this section. Is this better? If yes, remove the comments}
