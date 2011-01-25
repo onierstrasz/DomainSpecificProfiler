@@ -171,7 +171,7 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \begin{abstract}
-	Domain-specific languages and models are increasingly used within general-purpose host languages. While traditional profiling tools perform well on host language code itself, they often fail to provide meaningful results \ugh{if the developers start to internal domain-specific languages}. In this paper we motivate the need of dedicated profiling tools with three different case-studies. Furthermore, we present an infrastructure that enables developers to quickly prototype new profilers for their domain-specific languages and models.
+	Domain-specific languages and models are increasingly used within general-purpose host languages. While traditional profiling tools perform well on host language code itself, they often fail to provide meaningful results if the developers start to build and use abstractions on top of the host language. In this paper we motivate the need of dedicated profiling tools with three different case-studies. Furthermore, we present an infrastructure that enables developers to quickly prototype new profilers for their domain-specific languages and models.
 \end{abstract}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -201,28 +201,22 @@
 % 
 % \jr{end}
 
+The advances of domain-specific languages and models reveals a drastic change in the way software is being built. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a} and program checking~\cite{Reng10b} and tool integration~\cite{Reng10a}.
 
-The advances of domain-specific languages and models reveals a drastic change in the way software is being built. 
-%\lr{do not understand:} The need to better define software application domain favored metamodels to be considered as first class-entities. 
-The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a} and language checking \lr{What is `language checking'? There is only `program checking'} and embedding tools~\cite{Reng10a} \lr{The ECOOP paper does not talk about `program checking', only \cite{Reng10b}}. \jr{@Lukas can you fix this, I do not fully understand your comment.}
+While research on domain-specific languages made consistent progress on language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done on profiling. We consider profiling as the activity to record and analyze a program execution. Profiling is essential to analyze transient run-time data that otherwise would be to hard to harvest and compare by normal debugging. Code profilers commonly employ executing sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted when regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure.
 
-%Whereas domain specification and definition received a fair amount of attention from the research community, domain profiling and debugging remains largely under considered. 
-While research on domain-specific languages made consistent progress on language specification \cite{Deur00a}, implementation and verification, little has been done on profiling. \ab{We need to strengthen this paragraph with some references}
-We consider profiling as the activity to record and analyze a program execution. Profiling is essential to analyze complex data that otherwise would be to hard to harvest and compare by normal debugging.
-Common code profilers employ executing sampling as the way to cheaply obtain dynamic information. 
-Unfortunately, information extracted when regularly sampling the method call stack cannot be used to profile a domain other than source code model.
+\lr{I don't think the Mondrian example is particularly illustrative. I would go along what is commented on top of this section.}
 
 As an introductionary illustration, consider the Mondrian visualization engine\footnote{Mondrian will be detailed in the coming section (\autoref{mondrian}).}. A visualization is described in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
 %\footnote{\lr{I would avoid footnotes (they look ugly) and just say that there were complaints.} This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. 
-Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) has not been useful. The Mondrian domain particularities are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
+Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) has not been useful \lr{why not?}. The Mondrian domain particularities \lr{what are these?} are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
 
 %The domain, defined in terms of nodes and edges, \ugh{used by Mondrian is completely ignored by standard code profiler since they can only consider classes, method and stack frame}. This problem \ugh{, and many more,} has been successfully addressed with adequate domain-specific profilers.
 
-
 This paper propose a general solution for profiling specific domains. It gives the essential properties an effective domain-specific profiler must meet. 
 %\lr{do not understand:} It is important to notice that, \ugh{as metamodels are becoming first class entities}, a profiler's measurement dimension cannot be solely limited to execution time. 
-The properties we identified a domain-specific profiler must be designed around are \emph{identifiable domain}, \emph{recordable domain events}, \emph{presentable} and \emph{evolvable}. By fulfilling these properties, a profiler will be able to be effective at identifying anomalies and sub-optimal configuration in the way a particular domain is treated.
-These properties are illustrated on 3 profilers for the domains: Mondrian visualizations, OmniBrowser graph models and PetitParser grammars. These profilers were designed to assess the quality of the domain modeling. A number of bugs and issues have been identified and fixed.
+We identified the following properties a domain-specific profiler must be designed around: \emph{identifiable domain}, \emph{recordable domain events}, \emph{presentable} \lr{you mean \emph{accessible domain state}?} and \emph{evolvable} \lr{what?}. By fulfilling these properties, a profiler will be effective at identifying bottlenecks and anomalies in the application code and be able to present these in therms of the application code.
+These properties will be illustrated in three domains: Mondrian visualizations, OmniBrowser browser models, and PetitParser grammars. These profilers were designed to assess the quality of the domain modeling. A number of bugs and issues have been identified and fixed.
 
 The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of three real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
 
