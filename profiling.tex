@@ -228,7 +228,7 @@ The remainder of this paper is structured as follows: \autoref{sec:problem} illu
 Current application profilers are useful to gather runtime data (\eg method invocations, method coverage, call trees, memory consumption) from the static code model offered by the programming language (\eg packages, classes, methods, statements). This is an effective approach when the low-level source code has to be profiled.
 
 However, traditional profilers are hardly useful on a domain different than the code model. In many today's software there is a significant gap between the model offered by the execution platform and the model of the actually running application. 
-\jr{we have to clarify this sentence:} The proliferation of meta-models and domain-specific languages \chg{builds}{brought?} new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
+The proliferation of meta-models and domain-specific languages brings new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
 
 
 %:=========
@@ -277,6 +277,8 @@ PetitParser is a parsing framework combining ideas from scannerless parsing, par
 A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. 
 %As being the result of a lengthy engineering process, a grammar may contain unnecessary rules and duplication \lr{this is not about duplication, but coverage!}. 
 Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows:
+
+\lr{Smalltalk is not introduced yet}
 
 \begin{lstlisting}
 <b>PPJavaSyntax>>ifStatement</b>
