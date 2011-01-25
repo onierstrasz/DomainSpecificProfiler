@@ -177,6 +177,8 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Introduction}\seclabel{introduction}
 
+\ab{What is necessary to instantiate MetaSpy does not directly map to the requirements we identified. This may be a problem on some point}
+
 % \jr{We need to argument something like this:}
 % 
 % I don't remember why with mondrian the traditional profiler fails, but with PP the argumentation for the intro could go as follows:
@@ -209,7 +211,7 @@ While research on domain-specific languages made consistent progress on language
 
 As an introductionary illustration, consider the Mondrian visualization engine\footnote{Mondrian will be detailed in the coming section (\autoref{mondrian}).}. A visualization is described in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
 %\footnote{\lr{I would avoid footnotes (they look ugly) and just say that there were complaints.} This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. 
-Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) has not been useful \lr{why not?}. The Mondrian domain particularities \lr{what are these?} are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
+Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not satisfactorily help identify which of the rendered nodes are responsible of a slow down. The Mondrian domain is defined as a graph of object, which cannot be easily retrieved from the method call stack and from the source code artifacts. %The Mondrian domain particularities \lr{what are these?} are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
 
 %The domain, defined in terms of nodes and edges, \ugh{used by Mondrian is completely ignored by standard code profiler since they can only consider classes, method and stack frame}. This problem \ugh{, and many more,} has been successfully addressed with adequate domain-specific profilers.
 
@@ -483,6 +485,7 @@ Keeping track of the activation and deactivation of theses two caches is realize
 
 \lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}
 
+{\sc MondrianCacheActivation} instantiates \project in less than 22 lines of code. 
 The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled are the node. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
@@ -530,7 +533,8 @@ All the nodes obtained from the root of the model object are ``observed'' by the
 The profiling of Mondrian is visualized using Mondrian itself. The following \co{\#visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
 \lr{Please no source code with dots.}
-\lr{What does this show?}
+\lr{What does this show?} 
+\ab{I would remove this listing actually. It does not give anything new}
 \begin{lstlisting}
 MSMondrianSpy>>visualizeOn: view
 	view interaction every: 250 do: [ 
@@ -547,8 +551,8 @@ One important point of \co{\#visualizeOn:} is to regularly update the visualizat
 
 \autoref{fig:MondrianProfiler} gives a screenshot of a visualization and the profiler. The right-hand side is an example of the \emph{System Complexity} visualization~\cite{Lanz03d} of the collection class hierarchy in Pharo. The left hand side shows the profiler applied to the visualization. The horizontal bar indicates the amount of times the corresponding node has been displayed. %This visualization has been obtained by dragging and dropping the \ct{Collection} node
 
-\jr{@Alex can you provide a brief justification on why this visualization is better helps to identify this problems?} 
-This visualization helps identifying unnecessary render of graphical element. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
+\jr{@Alex can you provide a brief justification on why this visualization is better helps to identify this problems?} \ab{Is this better? If yes, then remove the comment}
+The profiling monitors each node of the profiled visualization. Each node is associated to a progress bar that widens upon node refresh. The profiled visualization remains interactive. Clicking and drag-and-dropping nodes refresh the visualization, thus increasing the progress bar of the corresponding nodes. This profile helps identifying unnecessary rendering. We identified a situation in which nodes were refreshing without receiving user actions. This was perceived by the user as a sluggish rendering. Edges were constantly refreshed, even without being apparent. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
 
 %:========
 \subsection{Case Study: Events in Omnibrowser}
@@ -740,6 +744,11 @@ Our contributions are the following:
 \end{enumerate}
 
 As future work we plan to ... \jr{@Alex @Lukas any ideas here?}
+\ab{What about the following}
+\begin{itemize}
+\item profile a group of objects, instead a unique one
+\item We already presented two visualizations (\autoref{MondrianExample} and \autoref{MondrianProfiler}). The second has has been used for Mondrian, and OB. Is there a way to classify different domain-specific profiler? Are there some common pattern in what has to be profiled? Classification?
+\end{itemize}
 
 % \jr{The first paragraph does not make sense to me, what is the idea?}
 % This problem is rather well generalized. For example, profiling a virtual machine is a particularly difficult activity, since instead of providing information about bytecode and primitive executions, the virtual machine talks about functions executions\footnote{\url{http://www.mirandabanda.org/cogblog/2008/12/30/the-idee-fixe-and-the-perfected-profiler/}}.
