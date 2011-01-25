@@ -505,7 +505,7 @@ MSAbstractMondrianSpy subclass: #MSMondrianDisplayOnSpy
 	instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
-{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshs.
+{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshes.
 
 \begin{lstlisting}
 <b>MSMondrianSpy>>initialize</b>
