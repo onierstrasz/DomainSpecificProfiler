@@ -263,8 +263,8 @@ The profiler produces a textual output, we next show an except of it:
 
 It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help pinpointing which nodes and edges are culprit of the time taken. Not all the graphical elements equally consume resources.
 
-Traditional execution sampling profilers center their result on the frames of the execution stack and completely ignore the identify of the object that received the method call and its arguments. As a consequence, it is hard to track down what are the objects culprit of the slowness. On the example above, MessageTally says that we spent 30.9\% in \ct{MONode>>displayOn} without saying which nodes were actually refreshed too often.
-\jr{@Alex I think that here we should have some gluing sentence that explain how stack based profilers like MessageTally were not useful. Then this two parts in the paragraph will flow better. Just one or two sentences will be enough. Maybe saying how you found the problem at the end might help to contrast to MessageTally data.}\ab{Is this better?}
+Traditional execution sampling profilers center their result on the frames of the execution stack and completely ignore the identify of the object that received the method call and its arguments. As a consequence, it is hard to track down what are the objects culprit of the slowness. On the example above, the traditional profiler says that we spent 30.9\% in \ct{MONode>>displayOn} without saying which nodes were actually refreshed too often.
+%\jr{@Alex I think that here we should have some gluing sentence that explain how stack based profilers like MessageTally were not useful. Then this two parts in the paragraph will flow better. Just one or two sentences will be enough. Maybe saying how you found the problem at the end might help to contrast to MessageTally data.}\ab{Is this better?}
 %We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though the model did not change. 
 %This performance issue has been solved a few days after the complain via a quantification of the displayOn: invocation on each objects and metric computation. The information collected by MessageTally was not useful to solve the problem. 
 
@@ -276,9 +276,9 @@ PetitParser is a parsing framework combining ideas from scannerless parsing, par
 
 A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. 
 %As being the result of a lengthy engineering process, a grammar may contain unnecessary rules and duplication \lr{this is not about duplication, but coverage!}. 
-Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows:
+Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}:
 
-\lr{Smalltalk is not introduced yet}
+%\lr{Smalltalk is not introduced yet}
 
 \begin{lstlisting}
 <b>PPJavaSyntax>>ifStatement</b>
@@ -414,7 +414,7 @@ Profilers are responsible for modeling the domain-specific behavior to profile t
 Each of the different profilers are called spies. They are activated when they are installed. The installation process for each spy is defined in the \ct{setUp} method.
 Each spy is responsible for its own presentation and this is modeled in the method \ct{visualize}.
 
-We will next show specific examples of various domain-specific profilers\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}.
+We will next show specific examples of various domain-specific profilers.
 
 %\begin{tabular}{c|c|c}
 %					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
