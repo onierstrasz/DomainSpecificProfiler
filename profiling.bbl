@@ -8,12 +8,12 @@ Visser, E.:
   Volume 3016 of Lecture Notes in Computer Science.
 \newblock Spinger-Verlag (June 2004)  216--238
 
-\bibitem{Reng10a}
-Renggli, L., G\^irba, T., Nierstrasz, O.:
-\newblock Embedding languages without breaking tools.
-\newblock In D'Hondt, T., ed.: ECOOP'10: Proceedings of the 24th European
-  Conference on Object-Oriented Programming. Volume 6183 of LNCS.,
-  Springer-Verlag (2010)  380--404
+\bibitem{Tisi10a}
+Tisi, M., Cabot, J., Jouault, F.:
+\newblock Improving higher-order transformations support in atl.
+\newblock In: Proceedings of the Third international conference on Theory and
+  practice of model transformations. ICMT'10, Berlin, Heidelberg,
+  Springer-Verlag (2010)  215--229
 
 \bibitem{Reng10b}
 Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
@@ -22,23 +22,43 @@ Renggli, L., Ducasse, S., G\^irba, T., Nierstrasz, O.:
   on Objects, Models, Components and Patterns (TOOLS'10). Volume 6141 of LNCS.,
   Springer-Verlag (2010)  213--232
 
+\bibitem{Reng10a}
+Renggli, L., G\^irba, T., Nierstrasz, O.:
+\newblock Embedding languages without breaking tools.
+\newblock In D'Hondt, T., ed.: ECOOP'10: Proceedings of the 24th European
+  Conference on Object-Oriented Programming. Volume 6183 of LNCS.,
+  Springer-Verlag (2010)  380--404
+
 \bibitem{Deur00a}
 Deursen, A., Klint, P., Visser, J.:
 \newblock Domain-specific languages: An annotated bibliography.
 \newblock ACM SIGPLAN Notices \textbf{35}(6) (June 2000)  26--36
+
+\bibitem{Cuad09a}
+Cuadrado, J.S., Molina, J.G.:
+\newblock A model-based approach to families of embedded domain specific
+  languages.
+\newblock {IEEE} Transactions on Software Engineering \textbf{99}(1) (2009)
+
+\bibitem{Free06a}
+Freeman, S., Pryce, N.:
+\newblock Evolving an embedded domain-specific language in {Java}.
+\newblock In: OOPSLA'06: Companion to the 21st Symposium on Object-Oriented
+  Programming Systems, Languages, and Applications, Portland, Oregon, USA, ACM
+  (2006)  855--865
+
+\bibitem{Kaba08a}
+Kabanov, J., Raudj\"{a}rv, R.:
+\newblock {Embedded typesafe domain specific languages for Java}.
+\newblock In: PPPJ'08: Proceedings of the 6th International Symposium on
+  Principles and Practice of Programming in Java, Modena, Italy, ACM (2008)
+  189--197
 
 \bibitem{Meye06a}
 Meyer, M., G\^irba, T., Lungu, M.:
 \newblock Mondrian: An agile visualization framework.
 \newblock In: ACM Symposium on Software Visualization (SoftVis'06), New York,
   NY, USA, ACM Press (2006)  135--144
-
-\bibitem{Lava09a}
-Laval, J., Denier, S., Ducasse, S., Bergel, A.:
-\newblock Identifying cycle causes with enriched dependency structural matrix.
-\newblock In: Proceedings of the 2009 16th Working Conference on Reverse
-  Engineering. WCRE '09, Washington, DC, USA, IEEE Computer Society (2009)
-  113--122
 
 \bibitem{Gupt92a}
 Gupta, A., Hwu, W.M.W.:
