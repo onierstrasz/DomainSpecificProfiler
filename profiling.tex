@@ -241,7 +241,7 @@ The remainder of this paper is structured as follows: \autoref{sec:problem} illu
 
 Current application profilers are useful to gather runtime data (\eg method invocations, method coverage, call trees, memory consumption) from the static code model offered by the programming language (\eg packages, classes, methods, statements). This is an effective approach when the low-level source code has to be profiled.
 
-However, traditional profilers are hardly useful on a domain different than the code model. In many today's software there is a significant gap between the model offered by the execution platform and the model of the actually running application. 
+However, traditional profilers are hardly useful on a domain different than the code model. In \chg{many today's}{modern} software there is a significant gap between the model offered by the execution platform and the model of the actually running application. 
 The proliferation of meta-models and domain-specific languages brings new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
 
 
@@ -253,13 +253,13 @@ This section illustrates two shortcomings of traditional profiling techniques wh
 \paragraph{CPU time profiling.}
 Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}}~\cite{Meye06a} is an open and agile visualization engine. 
 Mondrian uses a graph, made of (possibly nested) nodes and edges, to describe a visualization. 
-In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh}} when performing a visualization.
-Tracking down the cause of the poor performance was not trivial. We first used the sample-based code profiled provided by Pharo\footnote{\url{http://pharo-project.org/}}.
+In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh} \on{please use a custom URL. bit.ly supports this}} when \chg{performing}{producing} a visualization.
+Tracking down the cause of the poor performance was not trivial. We first used the sample-based code \ugh{profiled provided} by Pharo\footnote{\url{http://pharo-project.org/}}.
 
 Execution sampling approximates the time spent in an application's methods by periodically stopping a program and recording the current set of methods under executions. Such a profiling technique is relatively accurate since it has little impact on the overall execution.
-Beside Smalltalk profiler execution sampling has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
+Beside \ugh{Smalltalk profiler execution sampling} \on{I cannot parse this. I suggest to delete the first three words} has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
 
-The profiler produces a textual output, we next show an except of it:
+The profiler produces a textual output, \on{no. do not use a comma to join two sentences in English!} we next show an \ugh{except} \on{?} of it: \on{crappy sentence. rewrite}
 
 \begin{lstlisting}
 54.8% {11501ms} MOCanvas>>drawOn: 
@@ -275,9 +275,9 @@ The profiler produces a textual output, we next show an except of it:
         ...    
 \end{lstlisting}
 
-It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help pinpointing which nodes and edges are culprit of the time taken. Not all the graphical elements equally consume resources.
+It essentially says that the virtual machine spent about 54\% of its time in the method \ct{#displayOn:} defined in the class \ct{MORoot}. A root is the unique non-nested node that contains all the nodes of the edges of the visualization. This general profiling information says that rendering nodes and edges consumes a great share of the CPU, but it does not help in pinpointing which nodes and edges are responsible for the time spent. Not all graphical elements equally consume resources.
 
-Traditional execution sampling profilers center their result on the frames of the execution stack and completely ignore the identify of the object that received the method call and its arguments. As a consequence, it is hard to track down what are the objects culprit of the slowness. On the example above, the traditional profiler says that we spent 30.9\% in \ct{MONode>>displayOn} without saying which nodes were actually refreshed too often.
+Traditional execution sampling profilers center their result on the frames of the execution stack and completely ignore the identify of the object that received the method call and its arguments. As a consequence, it is hard to track down which objects cause the slowdown. For the example above, the traditional profiler says that we spent 30.9\% in \ct{MONode>>displayOn} without saying which nodes were actually refreshed too often.
 %\jr{@Alex I think that here we should have some gluing sentence that explain how stack based profilers like MessageTally were not useful. Then this two parts in the paragraph will flow better. Just one or two sentences will be enough. Maybe saying how you found the problem at the end might help to contrast to MessageTally data.}\ab{Is this better?}
 %We found out that graphical shape properties such as line width, fill color, border color were constantly computed, even though the model did not change. 
 %This performance issue has been solved a few days after the complain via a quantification of the displayOn: invocation on each objects and metric computation. The information collected by MessageTally was not useful to solve the problem. 
@@ -290,7 +290,10 @@ PetitParser is a parsing framework combining ideas from scannerless parsing, par
 
 A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. 
 %As being the result of a lengthy engineering process, a grammar may contain unnecessary rules and duplication \lr{this is not about duplication, but coverage!}. 
-Getting the coverage of a grammar for a set of referential input text is useful to identify unused and duplicated parsing rules. The \ct{if} statement parsing rule is defined as follows\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}:
+Getting the coverage of a grammar for \ugh{a set of referential input text} \on{cannot parse --- what does this mean?} is useful to identify unused and duplicated parsing rules.
+\on{Maybe you mean this?:}
+\ins{It would be useful to establish how much of the grammar is actually exercised by a set of test files in order to identify unused and duplicated parsing rules.}
+The \ct{if} statement parsing rule is defined as follows\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}:
 
 %\lr{Smalltalk is not introduced yet}
 
@@ -302,9 +305,9 @@ Getting the coverage of a grammar for a set of referential input text is useful 
 
 % \lr{uhh, this doesn't tell me anything:} This parsing rule is the combination of parsers combined with the message named comma (\ct{,}).
 
-Coverage tools assess the coverage of the application source code by giving the list of methods involved in an execution. Some tools can even detect the coverage inside methods.
-Lets consider the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser which is defined with 210 rules. These rules are modeled with a graph of objects. 
-When in need of analyzing the parsing and production coverage of the Java Grammar parser traditional coverage tools only provide source code related data instead of domain-specific.
+Coverage tools assess the coverage of the application source code by \chg{giving the list of}{listing the} methods involved in an execution. Some tools can even detect the coverage inside methods.
+Let's consider the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser which is defined with 210 rules. These rules are modeled by a graph of objects. 
+\ugh{When in need of analyzing the parsing and production coverage of the Java Grammar parser traditional coverage tools only provide source code related data instead of domain-specific.} \on{puke! The subject of the sentence is "coverage tools", which are not in need of anything! rewrite}
 
 
 % Beside CPU consumption, sample-based profiling estimates the method coverage of an application: methods present in the call graph are covered by the referential input text. For example, the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser is defined with 210 rules. These rules are modeled with a graph of objects. Whereas MessageTally is relatively efficient in \ugh{estimating the coverage of source code} \lr{what????}, it is of a little help when applied to a graph of parsers, a domain other than classes and methods.
@@ -338,25 +341,24 @@ The two examples given above are representative. They illustrate the gap between
 \begin{itemize}
 \item \emph{Specifying the domain.} Being able to effectively designate the objects relevant for the profiling is essential.
 Since we are concerned with what makes up a visualization in Mondrian, we are interested in the different nodes and the invocation of the \ct{displayOn:} methods, instead of focusing on the implementation classes. 
-Parser objects in PetitParser are dynamically generated by applying the grammar rules on a given source text. Each parser is an instance of a subclass of \ct{Parser}. 
+Parser objects in PetitParser are dynamically generated by applying the grammar rules to a given source text. Each parser is an instance of a subclass of \ct{Parser}. 
 
 \item \emph{Capturing domain related events.}
 Relevant events generated by the domain have to be monitored and recorded to be analyzed during or after the execution. An event represents a particular change or action triggered by the domain being profiled. 
-Whereas the class \ct{MOGraphElement} and its subclasses total more than 263 methods, only less than 10 methods are related to displaying and computing shape dimensions. 
+Whereas the class \ct{MOGraphElement} and its subclasses total more than 263 methods, only \chg{less}{fewer} than 10 methods are related to displaying and computing shape dimensions. 
 
 %During the execution of the application, relevant changes and actions triggered by the domain have to be monitored and recorded. Monitoring too many events generates noise and distraction. 
  
-\item \emph{Effectively and concisely presents the necessary information.} 
+\item \emph{Effectively and concisely \chg{presents}{presenting} the necessary information.} 
 The information collected by traditional profilers is textual and targets method invocation. A method that invokes another will be located below it and indented. Moreover each method frame represented has a class name and a method name, which completely ignores the identity of the object and arguments that are part of the call.
-
-Collected information have to be presented in such a way that the important metrics and domain object composition are on the foreground.  
+Collected information has to be presented in such a way that the important metrics and domain object composition are in the foreground.  
 
 %\item The evolution of the profile over time.
 \end{itemize}
 
 % It is important to emphasize that the limitations we identified are not particular to MessageTally \lr{that's why I would not use that name, just say `traditional profilers'. Otherwise reviewers are going to say that this is far too specific and their profiler is different.}. Following MessageTally, 
 
-Common code profilers employ executing sampling as the way to cheaply obtain dynamic information. Unfortunately, information extracted when regularly sampling the method call stack cannot be used to profile a domain other than source code model.
+Common code profilers employ execution sampling as the way to cheaply obtain dynamic information. Unfortunately, information extracted when regularly sampling the method call stack cannot be used to profile a domain other than the source code model.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
