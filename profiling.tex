@@ -530,20 +530,20 @@ The installation and instrumentation of Mondrian by \project is realized by the 
 
 All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument. This block updates the number of displays for each node of the visualization.
 
-The profiling of Mondrian is visualized using Mondrian itself. The following \co{\#visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
+The profiling of Mondrian is visualized using Mondrian itself. The \co{MSMondrianSpy>>visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
-\lr{Please no source code with dots.}
-\lr{What does this show?} 
-\ab{I would remove this listing actually. It does not give anything new}
-\begin{lstlisting}
-MSMondrianSpy>>visualizeOn: view
-    view interaction every: 250 do: [ 
-    ...
-    view nodes: self model root allNodes forEach: [ :each |
-        ... ].
-    view verticalLineLayout.    
-    view announcer on: WindowClosed do: [:ann | self uninstall ]
-\end{lstlisting}
+% \lr{Please no source code with dots.}
+% \lr{What does this show?} 
+% \ab{I would remove this listing actually. It does not give anything new}
+% \begin{lstlisting}
+% MSMondrianSpy>>visualizeOn: view
+%     view interaction every: 250 do: [ 
+%     ...
+%     view nodes: self model root allNodes forEach: [ :each |
+%         ... ].
+%     view verticalLineLayout.    
+%     view announcer on: WindowClosed do: [:ann | self uninstall ]
+% \end{lstlisting}
 
 \fig{}{.8}{MondrianProfiler}{Profiling the \emph{System Complexity} visualization.}
 
@@ -551,7 +551,6 @@ One important point of \co{\#visualizeOn:} is to regularly update the visualizat
 
 \autoref{fig:MondrianProfiler} gives a screenshot of a visualization and the profiler. The right-hand side is an example of the \emph{System Complexity} visualization~\cite{Lanz03d} of the collection class hierarchy in Pharo. The left hand side shows the profiler applied to the visualization. The horizontal bar indicates the amount of times the corresponding node has been displayed. %This visualization has been obtained by dragging and dropping the \ct{Collection} node
 
-\jr{@Alex can you provide a brief justification on why this visualization is better helps to identify this problems?} \ab{Is this better? If yes, then remove the comment}
 The profiling monitors each node of the profiled visualization. Each node is associated to a progress bar that widens upon node refresh. The profiled visualization remains interactive. Clicking and drag-and-dropping nodes refresh the visualization, thus increasing the progress bar of the corresponding nodes. This profile helps identifying unnecessary rendering. We identified a situation in which nodes were refreshing without receiving user actions. This was perceived by the user as a sluggish rendering. Edges were constantly refreshed, even without being apparent. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
 
 %:========
