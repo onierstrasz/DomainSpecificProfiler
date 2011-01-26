@@ -27,14 +27,14 @@
 \usepackage[all]{hypcap}
 \setcounter{tocdepth}{2}
 \hypersetup{
-	colorlinks=true,
-	urlcolor=black,
-	linkcolor=black,
-	citecolor=black,
-	plainpages=false,
-	bookmarksopen=true,
-	pdfauthor={\Authors},
-	pdftitle={\Title}}
+    colorlinks=true,
+    urlcolor=black,
+    linkcolor=black,
+    citecolor=black,
+    plainpages=false,
+    bookmarksopen=true,
+    pdfauthor={\Authors},
+    pdftitle={\Title}}
 
 \def\chapterautorefname{Chapter}
 \def\appendixautorefname{Appendix}
@@ -50,34 +50,34 @@
 \usepackage{listings}
 \definecolor{source}{gray}{0.9}
 \lstset{
-	language={},
-	% characters
-	tabsize=3,
-	upquote=true,
-	escapechar={!},
-	keepspaces=true,
-	breaklines=true,
-	alsoletter={\#:},
-	breakautoindent=true,
-	columns=fullflexible,
-	showstringspaces=false,
-	basicstyle=\footnotesize\sffamily,
-	% background
-	frame=single,
+    language={},
+    % characters
+    tabsize=3,
+    upquote=true,
+    escapechar={!},
+    keepspaces=true,
+    breaklines=true,
+    alsoletter={\#:},
+    breakautoindent=true,
+    columns=fullflexible,
+    showstringspaces=false,
+    basicstyle=\footnotesize\sffamily,
+    % background
+    frame=single,
     framerule=0pt,
-	backgroundcolor=\color{source},
-	% numbering
-	numbersep=5pt,
-	numberstyle=\tiny,
-	numberfirstline=true,
-	% captioning
-	captionpos=b,
-	% formatting (html)
-	moredelim=[is][\textbf]{<b>}{</b>},
-	moredelim=[is][\textit]{<i>}{</i>},
-	moredelim=[is][\color{red}\uwave]{<u>}{</u>},
-	moredelim=[is][\color{red}\sout]{<del>}{</del>},
-	moredelim=[is][\color{blue}\underline]{<ins>}{</ins>}}
+    backgroundcolor=\color{source},
+    % numbering
+    numbersep=5pt,
+    numberstyle=\tiny,
+    numberfirstline=true,
+    % captioning
+    captionpos=b,
+    % formatting (html)
+    moredelim=[is][\textbf]{<b>}{</b>},
+    moredelim=[is][\textit]{<i>}{</i>},
+    moredelim=[is][\color{red}\uwave]{<u>}{</u>},
+    moredelim=[is][\color{red}\sout]{<del>}{</del>},
+    moredelim=[is][\color{blue}\underline]{<ins>}{</ins>}}
 \newcommand{\ct}{\lstinline[backgroundcolor=\color{white},basicstyle=\footnotesize\ttfamily]}
 \newcommand{\lct}[1]{{\small\tt #1}}
 
@@ -90,8 +90,8 @@
 % \usetikzlibrary{shapes.multipart}
 % 
 % \tikzset{
-% 	every picture/.style={semithick},
-% 	every text node part/.style={align=center}}
+%     every picture/.style={semithick},
+%     every text node part/.style={align=center}}
 
 % proof-reading
 \usepackage{xcolor}
@@ -107,12 +107,12 @@
 \newboolean{showcomments}
 \setboolean{showcomments}{true}
 \ifthenelse{\boolean{showcomments}}
-	{\newcommand{\nb}[3]{
-		{\colorbox{#2}{\bfseries\sffamily\scriptsize\textcolor{white}{#1}}}
-		{\textcolor{#2}{\sf\small$\blacktriangleright$\textit{#3}$\blacktriangleleft$}}}
-	 \newcommand{\version}{\emph{\scriptsize$-$Id$-$}}}
-	{\newcommand{\nb}[2]{}
-	 \newcommand{\version}{}}
+    {\newcommand{\nb}[3]{
+        {\colorbox{#2}{\bfseries\sffamily\scriptsize\textcolor{white}{#1}}}
+        {\textcolor{#2}{\sf\small$\blacktriangleright$\textit{#3}$\blacktriangleleft$}}}
+     \newcommand{\version}{\emph{\scriptsize$-$Id$-$}}}
+    {\newcommand{\nb}[2]{}
+     \newcommand{\version}{}}
 \newcommand{\rev}[2]{\nb{Reviewer #1}{red}{#2}}
 \newcommand{\ab}[1]{\nb{Alexandre}{blue}{#1}}
 \newcommand{\lr}[1]{\nb{Lukas}{orange}{#1}}
@@ -122,11 +122,11 @@
 \DeclareGraphicsExtensions{.png,.jpg,.pdf,.eps,.gif}
 \graphicspath{{figures/}}
 \newcommand{\fig}[4]{
-	\begin{figure}[#1]
-		\centering
-		\includegraphics[width=#2\textwidth]{#3}
-		\caption{\label{fig:#3}#4}
-	\end{figure}}
+    \begin{figure}[#1]
+        \centering
+        \includegraphics[width=#2\textwidth]{#3}
+        \caption{\label{fig:#3}#4}
+    \end{figure}}
 
 % abbreviations
 \newcommand{\ie}{\emph{i.e.,}\xspace}
@@ -136,8 +136,8 @@
 
 % lists
 \newenvironment{bullets}[0]
-	{\begin{itemize}}
-	{\end{itemize}}
+    {\begin{itemize}}
+    {\end{itemize}}
 
 \newcommand{\seclabel}[1]{\label{sec:#1}}
 \newcommand{\co}[1]{{\sf #1}}
@@ -157,13 +157,13 @@
 \authorrunning{\AuthorsShort}
 
 \institute{$^1$ PLEIAD Lab, University of Chile, Santiago, Chile\\
-	\url{http://pleiad.dcc.uchile.cl} \\[0.3cm]
-	$^2$ Software Composition Group, University of Bern, Switzerland\\
-	\url{http://scg.unibe.ch}\\[0.3cm]
-%	\url{abergel@dcc.uchile.cl}\\
-%	\url{renggli@me.com}\\
-%	\url{jorge.ressia@gmail.com}
-	}
+    \url{http://pleiad.dcc.uchile.cl} \\[0.3cm]
+    $^2$ Software Composition Group, University of Bern, Switzerland\\
+    \url{http://scg.unibe.ch}\\[0.3cm]
+%    \url{abergel@dcc.uchile.cl}\\
+%    \url{renggli@me.com}\\
+%    \url{jorge.ressia@gmail.com}
+    }
 
 \maketitle
 
@@ -171,7 +171,7 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \begin{abstract}
-	Domain-specific languages and models are increasingly used within general-purpose host languages. While traditional profiling tools perform well on host language code itself, they often fail to provide meaningful results if the developers start to build and use abstractions on top of the host language. In this paper we motivate the need of dedicated profiling tools with three different case-studies. Furthermore, we present an infrastructure that enables developers to quickly prototype new profilers for their domain-specific languages and models.
+    Domain-specific languages and models are increasingly used within general-purpose host languages. While traditional profiling tools perform well on host language code itself, they often fail to provide meaningful results if the developers start to build and use abstractions on top of the host language. In this paper we motivate the need of dedicated profiling tools with three different case-studies. Furthermore, we present an infrastructure that enables developers to quickly prototype new profilers for their domain-specific languages and models.
 \end{abstract}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -207,7 +207,7 @@ The advances of domain-specific languages and models reveals a drastic change in
 
 While research on domain-specific languages made consistent progress on language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done on profiling. We consider profiling as the activity to record and analyze program execution. Profiling is essential to analyze transient run-time data that otherwise would be to hard to harvest and compare. Code profilers commonly employ executing sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted when regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure.
 
-\lr{I would don't really see how Mondrian demonstrates the problem. I would outline the problem as given in the commented bullet list at the beginning of this section.}
+\lr{I don't really see how Mondrian demonstrates the problem. I would outline the problem as given in the commented bullet list at the beginning of this section.}
 
 As an introductionary illustration, consider the Mondrian visualization engine\footnote{Mondrian will be detailed in the coming section (\autoref{mondrian}).}. A visualization is described in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
 %\footnote{\lr{I would avoid footnotes (they look ugly) and just say that there were complaints.} This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. 
@@ -256,12 +256,12 @@ The profiler produces a textual output, we next show an except of it:
   54.8% {11501ms} MORoot(MONode)>>displayOn: 
    30.9% {6485ms} MONode>>displayOn: 
       | 18.1% {3799ms} MOEdge>>displayOn: 
-     	...    
+         ...    
       |  8.4% {1763ms} MOEdge>>displayOn: 
       |    | 8.0% {1679ms} MOStraightLineShape>>display:on: 
       |    |  2.6% {546ms} FormCanvas>>line:to:width:color: 
-    	...    
-   23.4% {4911ms} MOEdge>>displayOn: 	
+        ...    
+   23.4% {4911ms} MOEdge>>displayOn:     
         ...    
 \end{lstlisting}
 
@@ -287,7 +287,7 @@ Getting the coverage of a grammar for a set of referential input text is useful 
 \begin{lstlisting}
 <b>PPJavaSyntax>>ifStatement</b>
     ^ ('if' asParser token , conditionalExpression , statement) , 
-	  ('else' asParser token , statement) optional
+      ('else' asParser token , statement) optional
 \end{lstlisting}
 
 % \lr{uhh, this doesn't tell me anything:} This parsing rule is the combination of parsers combined with the message named comma (\ct{,}).
@@ -406,13 +406,13 @@ Installing an observer activates the observer and the collection of events, whil
 
 Some of the observers are:
 \begin{description}
-	\item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer allows to hook into applications using this infrastructure and to dispatch them to the profiler.
-	\item[Method Observer.] This observer listens to the event when an specific method is invoked for any instance of a class.
-	\item[Object Observer.] This observer allows us to trigger event for a single instance of a class. This is called object-specific profiling. Some examples of event a single instance can trigger are: message send, message receive, state read and state write.
-	\item[Parser Observer.] The parser observers triggers an event whenever a specific production is activated.
-	%\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
-	%\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
-	The message name, sender and receiver can be taken into account in the definition of the condition. 
+    \item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer allows to hook into applications using this infrastructure and to dispatch them to the profiler.
+    \item[Method Observer.] This observer listens to the event when an specific method is invoked for any instance of a class.
+    \item[Object Observer.] This observer allows us to trigger event for a single instance of a class. This is called object-specific profiling. Some examples of event a single instance can trigger are: message send, message receive, state read and state write.
+    \item[Parser Observer.] The parser observers triggers an event whenever a specific production is activated.
+    %\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
+    %\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
+    The message name, sender and receiver can be taken into account in the definition of the condition. 
 \end{description}
 
 Profilers are responsible for modeling the domain-specific behavior to profile the main abstractions in the each domain.
@@ -423,16 +423,16 @@ Each spy is responsible for its own presentation and this is modeled in the meth
 We will next show specific examples of various domain-specific profilers.
 
 %\begin{tabular}{c|c|c}
-%					&	\textbf{Host language} 	& \textbf{DSL} \\ \hline
-%					&						& 		\\
-%\textbf{$M_0$ - Static}	&	classes, methods		& 		\\
-%					&						& 		\\\hline
-%					&						& Mondrian\\
-%\textbf{$M_1$ - Dynamic}	&	method activation		& OB-metamodel\\
-%					&						& Grammars\\ \hline
-%					&						& OB Browser\\
-%\textbf{$M_2$ -} 		&						& Visualization\\
-%					&						& Mondrian
+%                    &    \textbf{Host language}     & \textbf{DSL} \\ \hline
+%                    &                        &         \\
+%\textbf{$M_0$ - Static}    &    classes, methods        &         \\
+%                    &                        &         \\\hline
+%                    &                        & Mondrian\\
+%\textbf{$M_1$ - Dynamic}    &    method activation        & OB-metamodel\\
+%                    &                        & Grammars\\ \hline
+%                    &                        & OB Browser\\
+%\textbf{$M_2$ -}         &                        & Visualization\\
+%                    &                        & Mondrian
 %\end{tabular}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -459,31 +459,31 @@ Keeping track of the activation and deactivation of theses two caches is realize
 {\sc MondrianCacheActivation} is defined as follows \lr{what does this demonstrate?}:
 
 \begin{lstlisting}[numbers=left]
-<b>MSMetaSpy subclass: #MSAbstractMondrianSpy</b>
-	instanceVariableNames: 'nodes'
-	
+MSMetaSpy subclass: #MSAbstractMondrianSpy
+    instanceVariableNames: 'nodes'
+
 <b>MSAbstractMondrianSpy>>setUp</b>
-	super setUp.
-	nodes := self model root allNodes.
-	
-<b>MSAbstractMondrianSpy subclass: #MSMondrianCacheActivationSpy</b>
+    super setUp.
+    nodes := self model root allNodes.
+
+MSAbstractMondrianSpy subclass: #MSMondrianCacheActivationSpy
 
 <b>MSMondrianActivationCacheSpy>>visualizeOn: view</b>
-	view interaction every: 1500 do: [
-		view root clear.
-		view shape rectangle
-			if: #hasCachedForm fillColor: Color red.
-
-		view nodes: nodes forEach: [:each |
-			view nodes: each metricCaches.
-			view gridLayout gapSize: 2.
-		].  
-		view edges: nodes from: #owner to: #yourself.
-		view treeLayout.
-		view root applyLayout ]
+    view interaction every: 1500 do: [
+        view root clear.
+        view shape rectangle
+            if: #hasCachedForm fillColor: Color red.
+        
+        view nodes: nodes forEach: [ :each |
+            view nodes: each metricCaches.
+            view gridLayout gapSize: 2 ].
+        
+        view edges: nodes from: #owner to: #yourself.
+        view treeLayout.
+        view root applyLayout ]
 \end{lstlisting}
 
-\lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}
+\lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}\lr{Look for \emph{morphic damage} in the settings, the setting used to be called something like that (I don't have a Pharo image at hand). Enabling it would highlight all Morphic updates quickly after drawing them. I used it for the original Mondrian implementation.} \lr{OS X has essentially the same in the Developer Tools, but again I don't have access to that right now. There is GUI debugging utility that can visualize different kinds of events on the live screen in various colors.}
 
 {\sc MondrianCacheActivation} instantiates \project in less than 22 lines of code. 
 The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled are the node. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
@@ -502,30 +502,30 @@ The \project framework is instantiated to create the {\sc MondrianDisplayOn} pro
 
 \begin{lstlisting}
 MSAbstractMondrianSpy subclass: #MSMondrianDisplayOnSpy
-	instanceVariableNames: 'actualCounter previousCounter'
+    instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
 {\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshes.
 
 \begin{lstlisting}
 <b>MSMondrianSpy>>initialize</b>
-	super initialize.
-	actualCounter := IdentityDictionary new.
-	previousCounter := IdentityDictionary new
+    super initialize.
+    actualCounter := IdentityDictionary new.
+    previousCounter := IdentityDictionary new
 \end{lstlisting}
 
 The installation and instrumentation of Mondrian by \project is realized by the {\sf setUp} method:
 
 \begin{lstlisting}
 <b>MSMondrianSpy>>setUp</b>
-	self model root allNodes do: [ :node |
-		self 
-			observeObject: node
-			selector: #displayOn:
-			do: [ :receiver :selector :arguments |
-				actualCounter 
-					at: receiver
-					put: ((actualCounter at: receiver ifAbsentPut: [ 0 ]) + 1) ] ]
+    self model root allNodes do: [ :node |
+        self 
+            observeObject: node
+            selector: #displayOn:
+            do: [ :receiver :selector :arguments |
+                actualCounter 
+                    at: receiver
+                    put: ((actualCounter at: receiver ifAbsentPut: [ 0 ]) + 1) ] ]
 \end{lstlisting}
 
 All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument. This block updates the number of displays for each node of the visualization.
@@ -537,12 +537,12 @@ The profiling of Mondrian is visualized using Mondrian itself. The following \co
 \ab{I would remove this listing actually. It does not give anything new}
 \begin{lstlisting}
 MSMondrianSpy>>visualizeOn: view
-	view interaction every: 250 do: [ 
-	...
-	view nodes: self model root allNodes forEach: [ :each |
-		... ].
-	view verticalLineLayout.	
-	view announcer on: WindowClosed do: [:ann | self uninstall ]
+    view interaction every: 250 do: [ 
+    ...
+    view nodes: self model root allNodes forEach: [ :each |
+        ... ].
+    view verticalLineLayout.    
+    view announcer on: WindowClosed do: [:ann | self uninstall ]
 \end{lstlisting}
 
 \fig{}{.8}{MondrianProfiler}{Profiling the \emph{System Complexity} visualization.}
@@ -563,35 +563,35 @@ OmniBrowser~\cite{Berg08c} is a framework to define and compose new browsers: gr
 
 \begin{lstlisting}
 MSMetaSpy subclass: #MSOmniBrowserSpy
-	instanceVariableNames: 'actualCounter previousCounter'
+    instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
 \begin{lstlisting}
 <b>MSOmniBrowserSpy>>setUp</b>
-	self 
-		observeAnnouncer: self model announcer
-		do: [ :ann | 
-			actualCounter
-				at: ann class
-				put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ]
+    self 
+        observeAnnouncer: self model announcer
+        do: [ :ann | 
+            actualCounter
+                at: ann class
+                put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ]
 \end{lstlisting}
 
 %\paragraph{Meta-model instantiation}:
 %\begin{lstlisting}
-%	model := OBSystemBrowser onClass: Object selector: #printOn:.
-%	profile := OmniProfiler 
-%		profile: [ window :=  model open ]
-%		inPackage: 'OmniBrowser'.
+%    model := OBSystemBrowser onClass: Object selector: #printOn:.
+%    profile := OmniProfiler 
+%        profile: [ window :=  model open ]
+%        inPackage: 'OmniBrowser'.
 %\end{lstlisting}
 %
 %\paragraph{Recording events}:
 %\begin{lstlisting}
-%	model := OBSystemBrowser onClass: Object.
-%	actualCounter := Dictionary new.
-%	previousCounter := Dictionary new.
-%	model announcer
-%		observe: OBAnnouncement
-%		do: [ :ann | actualCounter at: ann class put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ].
+%    model := OBSystemBrowser onClass: Object.
+%    actualCounter := Dictionary new.
+%    previousCounter := Dictionary new.
+%    model announcer
+%        observe: OBAnnouncement
+%        do: [ :ann | actualCounter at: ann class put: (actualCounter at: ann class ifAbsentPut: [ 0 ]) + 1 ].
 %\end{lstlisting}
 
 \jr{@Lukas can you take care of this use case. What was the idea behind this example?}
@@ -607,9 +607,9 @@ With \project we can implement the grammar coverage with a few lines of code. Th
 
 \begin{lstlisting}[numbers=left]
 <b>PetitParserSpy>>setUp</b>
-	self grammar allParsers do: [ :parser |
-		self observeParser: parser in: self grammar do: [
-			counter at: parser put: (counter at: parser ifAbsent: [ 0 ]) + 1 ] ]
+    self grammar allParsers do: [ :parser |
+        self observeParser: parser in: self grammar do: [
+            counter at: parser put: (counter at: parser ifAbsent: [ 0 ]) + 1 ] ]
 \end{lstlisting}
 
 Line~2 iterates over all primitive parser objects in the grammar. Line~3 attaches the event handler on Line~4 to each parser in the model. The handler then counts the activations of each parser object when we run the test suite of the grammar. This provides us with the necessary information to display the grammar coverage in a visualization as seen in \autoref{fig:grammar-coverage}.
@@ -618,12 +618,12 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
 \jr{@Lukas Do you think this should be changed? what would be the cost?}
 
 \begin{figure}[h!tb]
-	\centering
-	\includegraphics[width=0.4\textwidth]{xml-uncovered}
-	\hspace{0.1\textwidth}
-	\includegraphics[width=0.4\textwidth]{xml-covered}
-	\caption{Production coverage of an XML grammar with uncovered productions highlighted in black (left); and the same XML grammar with updated test coverage and complete production coverage (right). The size of the nodes is proportional to the number of activations when running the test suite on the grammar.}
-	\label{fig:grammar-coverage}
+    \centering
+    \includegraphics[width=0.4\textwidth]{xml-uncovered}
+    \hspace{0.1\textwidth}
+    \includegraphics[width=0.4\textwidth]{xml-covered}
+    \caption{Production coverage of an XML grammar with uncovered productions highlighted in black (left); and the same XML grammar with updated test coverage and complete production coverage (right). The size of the nodes is proportional to the number of activations when running the test suite on the grammar.}
+    \label{fig:grammar-coverage}
 \end{figure}
 
 \ab{Which version of PetitParser correspond to the left hand side in Figure 4?} 
@@ -662,10 +662,10 @@ Lets consider the class \co{AnnouncementObserver}, whose responsibility is to ob
 
 \begin{lstlisting}
 <b>AnnouncementObserver>>install</b>
-	self announcer 
-			on: Announcement 
-			send: #value: 
-			to: self handler
+    self announcer 
+        on: Announcement 
+        send: #value: 
+        to: self handler
 \end{lstlisting}
 
 The \co{install} method installs an observer object on the domain specified in the \co{install} method. In the previous snippet of code we can see that the observer is hooked into the announcement system by evaluating the observer's handler when an announcement is triggered.
@@ -689,14 +689,14 @@ Lets consider the Message Received Observer, whose responsibility is to observe 
 
 \begin{lstlisting}
 <b>MessageReceivedObserver>>install</b>
-	self observerMetaObject boundTo: self object
+    self observerMetaObject boundTo: self object
 \end{lstlisting}
 
 \begin{lstlisting}
 <b>MessageReceivedObserver>>setUp</b>
-	profilingMetaObject := BehaviorMetaObject new 
-								when: self selector 
-								isReceivedDo: self handler
+    profilingMetaObject := BehaviorMetaObject new 
+        when: self selector 
+        isReceivedDo: self handler
 \end{lstlisting}
 The method \ct{install} binds a meta-object to the object to be observed.
 The method \ct{setUp} initializes the profiling meta-object with a behavioral meta-object. 
@@ -716,7 +716,7 @@ However, a Java solution would be more static in nature: it would not be possibl
 
 
 %:========
-\subsection{Benchmark}	
+\subsection{Benchmark}    
 
 Profiling always impact the performance of the application being analyze. 
 We have performed a micro-benchmark to assess the maximal performance impact of \project. 
@@ -731,16 +731,16 @@ We analyze the impact of \project on both profiling uses cases. All benchmarks w
 \jr{I do not know if we really have to say something about this here.}
 This micro-benchmark shows that reflection on a runtime system can have a significant performance impact. However, for real-world application with only few reifications the performance impact is significantly lower. Albedo's meta-objects provide a way of adapting selected objects thus allowing reflection to be applied within a fine-grained scope only. This provides a natural way of controlling the performance impact of reflective changes.
 
-	
+    
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Conclusion}\seclabel{conclusion}
 
 %In this paper we have presented \project, a framework for defining domain-specific profilers.
 Our contributions are the following:
 \begin{enumerate}
-	\item We have demonstrate the need for domain-specific profilers. We showed how standard profilers only concerned with the source code representation are inadequate for profiling domain-specific problems. We demonstrated this drawback with two use cases.
-	\item We stated the requirements domain-specific profilers must fulfill: specifying the domain, capturing domain related events and presenting the necessary information. 
-	\item We presented \project a framework for defining domain-specific profilers. We also presented three real-world case-studies showing how \project fulfills the domain-specific profiler requirements.
+    \item We have demonstrate the need for domain-specific profilers. We showed how standard profilers only concerned with the source code representation are inadequate for profiling domain-specific problems. We demonstrated this drawback with two use cases.
+    \item We stated the requirements domain-specific profilers must fulfill: specifying the domain, capturing domain related events and presenting the necessary information. 
+    \item We presented \project a framework for defining domain-specific profilers. We also presented three real-world case-studies showing how \project fulfills the domain-specific profiler requirements.
 \end{enumerate}
 
 As future work we plan to ... \jr{@Alex @Lukas any ideas here?}
