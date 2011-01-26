@@ -672,6 +672,8 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Implementation}\seclabel{implementation}
 
+\on{title seems wrong}
+
 %\jr{the first paragraph does not make sense, change it.}
 %\lr{that was already said}
 % The implementation \project heavily relies on observers (Observer Design Pattern~\cite{Gamm95a}). 
@@ -683,7 +685,8 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
 % However, our case is slightly different since applications can not always be prepared for an eventual profiling since a programmer cannot reliably predict which part of the software will have to be profiled in the future. 
 % This constraint significantly raises the complexity of implementing \project. 
 
-\project has two ways of implementing an observer: registering the observer to preexistent event-based systems, or using the meta-level programming techniques of the host language.
+\project has two ways of implementing an observer: registering the observer to pre-existing event-based systems, or using the meta-level programming techniques of the host language.
+\on{wtf? registering an observer is not a way to implement it. rewrite and clear up the fuzziness}
 
 Lets consider the class \co{AnnouncementObserver}, whose responsibility is to observe the generation of specific announcements.
 
@@ -697,17 +700,17 @@ Lets consider the class \co{AnnouncementObserver}, whose responsibility is to ob
 
 The \co{install} method installs an observer object on the domain specified in the \co{install} method. In the previous snippet of code we can see that the observer is hooked into the announcement system by evaluating the observer's handler when an announcement is triggered.
 
-However, not all profiling activities can rely in a preexistent mechanism for registering to events. Because of this, we need to rely on the meta-programming facilities of the host language.
-These facilities are not always uniform and require ad-hoc code to hook behavior in.
+However, not all profiling activities can rely on a preexisting mechanism for registering to events. Because of this, we need to rely on the meta-programming facilities of the host language.
+These facilities are not always uniform and require ad-hoc code to hook in behavior.
 To avoid this drawback we decided to use a framework that provides uniform meta-programming abstractions.
-Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
+Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply into the environment. 
 Albedo is a reflective system based on explicit meta-objects to improve meta-level engineering.
 
 
 %Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
 %Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
 
-Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in the behavioral reifications. A behavioral meta-object reifying message send was used for the message send observer. As well as a behavioral meta-object for reifying received message. State read and write are also supported by behavioral meta-objects thus \project can profile this dynamic events.
+Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in behavioral reifications. A behavioral meta-object reifying message sends was used for the message send observer. \ugh{As well as a behavioral meta-object for reifying received message.} \on{not a sentence} State read and write are also supported by behavioral meta-objects thus \project can profile these dynamic events.
 Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement.
 
 Lets consider the Message Received Observer, whose responsibility is to observe when an specific object receives an specific message.
@@ -730,25 +733,29 @@ The method \ct{setUp} initializes the profiling meta-object with a behavioral me
 This meta-object evaluates the handler when a specific message is received by the profiled object. This mechanism is termed \emph{object-specific instrumentation}.
 
 Object-specific instrumentation is not trivial to achieve in class-based languages like Smalltalk and Java \ab{without a significant overhead? AspectJ has a perObject keyword I think}. 
-Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on this constructs.
-Moreover, most languages provide a good level of structural reflection which deals with language structural elements like classes, method, statements, \etc
-But most languages do not provide a standard mechanism to reflect on the dynamic abstraction of the language.
-There are no abstractions for meta-events like a message send, a message receive, a state read, \etc.
+Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on these constructs.
+Moreover, most languages provide a good level of structural reflection to deal with structural elements like classes, method, statements, \etc
+But most languages do not provide a standard mechanism to reflect on the dynamic abstractions of the language.
+There are typically no abstractions \chg{for}{to intercept} \on{?} meta-events such as a message send, a message receive, a state read, \etc.
 
-Albedo has been designed as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex~\cite{Tant03a}.
-\ab{is the following important? I would comment out all the remaining}Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
+Albedo has been designed as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex model~\cite{Tant03a}.
+\ab{is the following important? I would comment out all the remaining}
+\on{yes, please kill it}
+\ugh{Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
 %The reason for choosing Pharo Smalltalk for implementing Albedo is that it more naturally supports \emph{unanticipated} use of reflection at run-time and supports an AST-based reflective code model.
-However, a Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.
+However, a Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.}
 
 
 
 %:========
 \subsection{Benchmark}    
 
-Profiling always impact the performance of the application being analyze. 
+\on{funny to have just one subsection. maybe make a separate section?}
+
+Profiling always impacts the performance of the application being analyzed. 
 We have performed a micro-benchmark to assess the maximal performance impact of \project. 
 We assume that the behavior required to fulfill the profiling requirements is constant to any observer technique.
-\project has two mechanism to observe and application: to registering the observer to preexistent event-based systems, or using the meta-level programming techniques of the host language.
+\project has two mechanism to observe an application: registering the observer to preexisting event-based systems, or using the meta-level programming techniques of the host language.
 
 We analyze the impact of \project on both profiling uses cases. All benchmarks were performed on an Apple MacBook Pro, 2.16 GHz Intel Core Duo in Pharo~1.1.1 with the jitted Cog VM. 
 %To avoid possible execution artifacts disturbing the benchmark we ensure that the involved reflective and jitted methods are created in advance and that method lookup caches are filled.
