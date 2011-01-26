@@ -178,7 +178,7 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Introduction}\seclabel{introduction}
 
-\ab{What is necessary to instantiate MetaSpy does not directly map to the requirements we identified. This may be a problem on some point}
+%\ab{What is necessary to instantiate MetaSpy does not directly map to the requirements we identified. This may be a problem on some point}
 
 % \jr{We need to argument something like this:}
 % 
@@ -207,26 +207,24 @@
 The advances of domain-specific languages and models reveals a drastic change in the way software is being built. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a}, to program checking~\cite{Reng10b} and tool integration~\cite{Reng10a}.
 \on{should be a list of 4 similar things: e.g. tools to build, to transform, to check and to integrate}
 
-While research on domain-specific languages has made consistent progress in language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done on profiling. We consider profiling to be the activity to record and analyze program execution. Profiling is essential to analyze transient run-time data that otherwise would be to hard to harvest and compare. Code profilers commonly employ \chg{executing}{execution} sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted \chg{when}{by} regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure.
+While research on domain-specific languages has made consistent progress in language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done on profiling. We consider profiling to be the activity to record and analyze program execution. Profiling is essential to analyze transient run-time data that otherwise would be too hard to harvest and compare. Code profilers commonly employ execution sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted by regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure. Specialized domains need specialized profilers.
 \on{Not really a crisp statement of the problem. The point is, I think, that sampling-based profilers focus on certain kind of information which is not really what you are looking for in certain domains. We need other, specialized profilers that dig up other kinds of information. Mondrian gives an example of different kind of profiling information needed. The question then is, can we have a framework for easily building specialized profilers. The title of the paper expresses this beautifully, but the above paragraph fails to home in on the key point. I would just add the following sentence to round out the paragraph:}
-\ins{Specialized domains need specialized profilers.}
 
-\lr{I don't really see how Mondrian demonstrates the problem. I would outline the problem as given in the commented bullet list at the beginning of this section.}
+
+%\lr{I don't really see how Mondrian demonstrates the problem. I would outline the problem as given in the commented bullet list at the beginning of this section.}
 
 As an introductory illustration, consider the Mondrian visualization engine\footnote{Mondrian is described in \autoref{mondrian}.}. A visualization is described in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
 %\footnote{\lr{I would avoid footnotes (they look ugly) and just say that there were complaints.} This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. 
-Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without a standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not \del{satisfactorily} help identify which of the rendered nodes are responsible for a slowdown. The Mondrian domain is defined as a graph of objects, which cannot be easily retrieved from the method call stack and from the source code artifacts.
-\on{The paragraph ends in an anti-climax. I would add something like this:}
-\ins{A specialized Mondrian profiler would be aware of Mondrian's domain concepts and provide profiling information tailored to the relevant structures.}
+Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without a standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not help identify which of the rendered nodes are responsible for a slowdown. The Mondrian domain is defined as a graph of objects, which cannot be easily retrieved from the method call stack and from the source code artifacts. A specialized Mondrian profiler would be aware of Mondrian's domain concepts and provide profiling information tailored to the relevant structures.
 %The Mondrian domain particularities \lr{what are these?} are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
 
 %The domain, defined in terms of nodes and edges, \ugh{used by Mondrian is completely ignored by standard code profiler since they can only consider classes, method and stack frame}. This problem \ugh{, and many more,} has been successfully addressed with adequate domain-specific profilers.
 
 This paper proposes a general solution for profiling specific domains. It offers the essential properties an effective domain-specific profiler must meet. 
 %\lr{do not understand:} It is important to notice that, \ugh{as metamodels are becoming first class entities}, a profiler's measurement dimension cannot be solely limited to execution time. 
-We identified the following requirements a domain-specific profiler must fulfill: \ugh{\emph{specifying the domain}, \emph{capture domain events}, \emph{effective information presentation}}.
-\on{should be: specifying, capturing, presenting}
-By fulfilling these requirements, a profiler will be effective at identifying bottlenecks and anomalies in the application code and be able to present these in terms of the \chg{application code}{relevant domain concepts}.
+We identified the following requirements a domain-specific profiler must fulfill: specifying, capturing and presenting. \jr{check on comment}
+%\ugh{\emph{specifying the domain}, \emph{capture domain events}, \emph{effective information presentation}}. \on{should be: specifying, capturing, presenting}
+By fulfilling these requirements, a profiler will be effective at identifying bottlenecks and anomalies in the application code and be able to present these in terms of the relevant domain concepts.
 \on{?}
 These properties will be illustrated in three domains: Mondrian visualizations, OmniBrowser browser models, and PetitParser grammars. These profilers were designed to assess the quality of the domain modeling. A number of bugs and issues have been identified and fixed.
 
@@ -241,7 +239,7 @@ The remainder of this paper is structured as follows: \autoref{sec:problem} illu
 
 Current application profilers are useful to gather runtime data (\eg method invocations, method coverage, call trees, memory consumption) from the static code model offered by the programming language (\eg packages, classes, methods, statements). This is an effective approach when the low-level source code has to be profiled.
 
-However, traditional profilers are hardly useful on a domain different than the code model. In \chg{many today's}{modern} software there is a significant gap between the model offered by the execution platform and the model of the actually running application. 
+However, traditional profilers are hardly useful on a domain different than the code model. In modern software there is a significant gap between the model offered by the execution platform and the model of the actually running application. 
 The proliferation of meta-models and domain-specific languages brings new abstractions that map to the underlying execution platform in non-trivial ways. Traditional profiling tools fail to display relevant information in the presence of such abstractions.
 
 
@@ -253,11 +251,11 @@ This section illustrates two shortcomings of traditional profiling techniques wh
 \paragraph{CPU time profiling.}
 Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}}~\cite{Meye06a} is an open and agile visualization engine. 
 Mondrian uses a graph, made of (possibly nested) nodes and edges, to describe a visualization. 
-In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh} \on{please use a custom URL. bit.ly supports this}} when \chg{performing}{producing} a visualization.
-Tracking down the cause of the poor performance was not trivial. We first used the sample-based code \ugh{profiled provided} by Pharo\footnote{\url{http://pharo-project.org/}}.
+In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh} \on{please use a custom URL. bit.ly supports this}} when producing a visualization.
+Tracking down the cause of the poor performance was not trivial. We first used the sample-based profiler provided by Pharo\footnote{\url{http://pharo-project.org/}}.
 
 Execution sampling approximates the time spent in an application's methods by periodically stopping a program and recording the current set of methods under executions. Such a profiling technique is relatively accurate since it has little impact on the overall execution.
-Beside \ugh{Smalltalk profiler execution sampling} \on{I cannot parse this. I suggest to delete the first three words} has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
+Sampling has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
 
 The profiler produces a textual output, \on{no. do not use a comma to join two sentences in English!} we next show an \ugh{except} \on{?} of it: \on{crappy sentence. rewrite}
 
@@ -290,9 +288,7 @@ PetitParser is a parsing framework combining ideas from scannerless parsing, par
 
 A number of grammars have been implemented, including Java, Smalltalk, XML and SQL. 
 %As being the result of a lengthy engineering process, a grammar may contain unnecessary rules and duplication \lr{this is not about duplication, but coverage!}. 
-Getting the coverage of a grammar for \ugh{a set of referential input text} \on{cannot parse --- what does this mean?} is useful to identify unused and duplicated parsing rules.
-\on{Maybe you mean this?:}
-\ins{It would be useful to establish how much of the grammar is actually exercised by a set of test files in order to identify unused and duplicated parsing rules.}
+It would be useful to establish how much of the grammar is actually exercised by a set of test files in order to identify unused and duplicated parsing rules.
 The \ct{if} statement parsing rule is defined as follows\footnotetext{Readers unfamiliar with the syntax of Smalltalk might want to read the code examples aloud and interpret them as normal sentences: An invocation to a method named \ct{method:with:}, using two arguments looks like: \ct{receiver method: arg1 with: arg2}. The semicolon separates cascaded messages that are sent to the same receiver. For example, \ct{receiver method1: arg1; method2: arg2} sends the messages \ct{method1:} and \ct{method2:} to \ct{receiver}. Other syntactic elements of Smalltalk are: the dot to separate statements: \ct{statement1. statement2}; square brackets to denote code blocks or anonymous functions: \ct{[ statements ]}; and single quotes to delimit strings: \ct{'a string'}. The caret \ct{^} returns the result of the following expression.}:
 
 %\lr{Smalltalk is not introduced yet}
@@ -305,9 +301,13 @@ The \ct{if} statement parsing rule is defined as follows\footnotetext{Readers un
 
 % \lr{uhh, this doesn't tell me anything:} This parsing rule is the combination of parsers combined with the message named comma (\ct{,}).
 
-Coverage tools assess the coverage of the application source code by \chg{giving the list of}{listing the} methods involved in an execution. Some tools can even detect the coverage inside methods.
+Coverage tools assess the coverage of the application source code by listing the methods involved in an execution. Some tools can even detect the coverage inside methods.
 Let's consider the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser which is defined with 210 rules. These rules are modeled by a graph of objects. 
-\ugh{When in need of analyzing the parsing and production coverage of the Java Grammar parser traditional coverage tools only provide source code related data instead of domain-specific.} \on{puke! The subject of the sentence is "coverage tools", which are not in need of anything! rewrite}
+Traditional coverage tools focus on the source code artifacts instead of domain-specific data. That is why we are unable to analyze the parsing and production coverage of the Java Grammar. 
+%When analyzing the parsing and production coverage of the Java Grammar parser, 
+%Traditional coverage tools focus on certain kind of information which is not really what you are looking for in certain domains
+
+%When in need of analyzing the parsing and production coverage of the Java Grammar parser traditional coverage tools only provide source code related data instead of domain-specific.} \on{puke! The subject of the sentence is "coverage tools", which are not in need of anything! rewrite}
 
 
 % Beside CPU consumption, sample-based profiling estimates the method coverage of an application: methods present in the call graph are covered by the referential input text. For example, the Java grammar\footnote{\url{http://www.squeaksource.com/PetitJava.html}} for PetitParser is defined with 210 rules. These rules are modeled with a graph of objects. Whereas MessageTally is relatively efficient in \ugh{estimating the coverage of source code} \lr{what????}, it is of a little help when applied to a graph of parsers, a domain other than classes and methods.
@@ -345,11 +345,11 @@ Parser objects in PetitParser are dynamically generated by applying the grammar 
 
 \item \emph{Capturing domain related events.}
 Relevant events generated by the domain have to be monitored and recorded to be analyzed during or after the execution. An event represents a particular change or action triggered by the domain being profiled. 
-Whereas the class \ct{MOGraphElement} and its subclasses total more than 263 methods, only \chg{less}{fewer} than 10 methods are related to displaying and computing shape dimensions. 
+Whereas the class \ct{MOGraphElement} and its subclasses total more than 263 methods, only fewer than 10 methods are related to displaying and computing shape dimensions. 
 
 %During the execution of the application, relevant changes and actions triggered by the domain have to be monitored and recorded. Monitoring too many events generates noise and distraction. 
  
-\item \emph{Effectively and concisely \chg{presents}{presenting} the necessary information.} 
+\item \emph{Effectively and concisely presenting the necessary information.} 
 The information collected by traditional profilers is textual and targets method invocation. A method that invokes another will be located below it and indented. Moreover each method frame represented has a class name and a method name, which completely ignores the identity of the object and arguments that are part of the call.
 Collected information has to be presented in such a way that the important metrics and domain object composition are in the foreground.  
 
@@ -362,9 +362,7 @@ Common code profilers employ execution sampling as the way to cheaply obtain dyn
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-\section{Domain-Specific Profiler}\seclabel{profiler}
-
-\on{How about: \project in a Nutshell?}
+\section{\project in a Nutshell}\seclabel{profiler}
 
 % %:========
 % \subsection{Properties of a Domain-Specific Profiler} \label{fig:properties}
@@ -412,28 +410,29 @@ The key idea behind \project is to define domain-specific events that can later 
 There are two main abstractions: the observers and the domain-specific profilers. 
 
 An observer is responsible for adapting a domain-specific model and triggering specific actions when certain events happen.
-These observers follow the observer pattern~\cite{Gamm95a} and the profilers are the \ugh{subscribers}.
-\on{Ugh! You are confusing different terms for the same thing. In the observer pattern there are observers and subjects. Synonyms are subscribers (observers) and publishers (subjects). In this diagram it appears that the profilers are not subscribers (observers) at all, nor are they subjects (publishers), but rather they manage a list of observers. Better get your story right!}
+These observers follow the observer pattern~\cite{Gamm95a}.
+A profilers models a domain-specific profiling requirement through composing multiple observers.
+
+%\on{Ugh! You are confusing different terms for the same thing. In the observer pattern there are observers and subjects. Synonyms are subscribers (observers) and publishers (subjects). In this diagram it appears that the profilers are not subscribers (observers) at all, nor are they subjects (publishers), but rather they manage a list of observers. Better get your story right!}
 %Fulfilling the specific but these are not conditions that are constantly checked, these are events being triggered from the model} of an observer will trigger the handler defined in that observer.
-Some observers \ugh{work by means of registering} to existing hooks. Other observers intercept the system using meta-programming, \chg{this}{which} is also known as instrumentation.
-Installing an observer activates the observer and the collection of events, while uninstalling removes the observer. 
+Some observers work by registering to existing notification produced by the domain system. Other observers intercept the system using meta-programming, which is also known as instrumentation.
+Installing an observer activates the observer and the collection of events, while uninstalling deactivates the observer. 
 
 
 Some of the observers are:
 \begin{description}
-    \item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer \ugh{allows to} hook into applications using this infrastructure and to dispatch them to the profiler.
+    \item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer allows us to hook into applications using this infrastructure and to dispatch them to the profiler.
     \item[Method Observer.] This observer listens to the event when an specific method is invoked for any instance of a class.
-    \item[Object Observer.] This observer allows us to trigger \ugh{event} \on{an event? events?} for a single instance of a class.
-    \on{wtf? observers don't trigger events, they observe them!}
+    \item[Object Observer.] This observer allows to listen to events for a single instance of a class.
     This is called object-specific profiling. Some examples of events a single instance can trigger are: message send, message receive, state read and state write.
-    \item[Parser Observer.] \ugh{The parser observer triggers an event} \on{no no no!} whenever a specific production is activated.
+    \item[Parser Observer.] The parser observer listen to events produced whenever a specific production is activated.
     %\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
     %\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
     The message name, sender and receiver can be taken into account in the definition of the condition. 
 \end{description}
 
 Profilers are responsible for modeling the domain-specific behavior to profile the main abstractions in each domain.
-The \ct{MetaSpy} class models the general behavior of any profiler. It is composed of a model which is being profiled and a list of active observer or instrumentation strategies.
+The \ct{MetaSpy} class models the general behavior of any profiler. It is composed of a model which is being profiled and a list of active observers or instrumentation strategies.
 Each of the different profilers are called spies. They are activated when they are installed. The installation process for each spy is defined in the \ct{setUp} method.
 Each spy is responsible for its own presentation and this is modeled in the method \ct{visualize}.
 
@@ -552,7 +551,7 @@ The installation and instrumentation of Mondrian by \project is realized by the 
 
 All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument. This block updates the number of displays for each node of the visualization.
 
-The profiling of Mondrian is visualized using Mondrian itself. The \co{MSMondrianSpy>>visualizeOn:} \on{fix} method describes the visualization given in \autoref{fig:MondrianProfiler}.
+The profiling of Mondrian is visualized using Mondrian itself. The \co{visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
 % \lr{Please no source code with dots.}
 % \lr{What does this show?} 
@@ -685,8 +684,8 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
 % However, our case is slightly different since applications can not always be prepared for an eventual profiling since a programmer cannot reliably predict which part of the software will have to be profiled in the future. 
 % This constraint significantly raises the complexity of implementing \project. 
 
-\project has two ways of implementing an observer: registering the observer to pre-existing event-based systems, or using the meta-level programming techniques of the host language.
-\on{wtf? registering an observer is not a way to implement it. rewrite and clear up the fuzziness}
+\project has two ways of implementing an observer: listening to pre-existing event-based systems, or using the meta-level programming techniques of the host language to define meta-event the observer is interested in.
+%\on{wtf? registering an observer is not a way to implement it. rewrite and clear up the fuzziness}
 
 Lets consider the class \co{AnnouncementObserver}, whose responsibility is to observe the generation of specific announcements.
 
@@ -710,7 +709,7 @@ Albedo is a reflective system based on explicit meta-objects to improve meta-lev
 %Albedo~\cite{Ress10a} is a model of fined-grained unanticipated dynamic structural and behavioral adaptation. Instead of providing reflective capabilities as an external mechanism Albedo integrates them deeply in the environment. 
 %Albedo is a reflective system based on explicit meta-objects, and present a series of examples illustrating how these explicit meta-objects fulfill established requirements while improving engineering at the meta-level.
 
-Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in behavioral reifications. A behavioral meta-object reifying message sends was used for the message send observer. \ugh{As well as a behavioral meta-object for reifying received message.} \on{not a sentence} State read and write are also supported by behavioral meta-objects thus \project can profile these dynamic events.
+Albedo's meta-objects provide a structural view and a behavioral view. In the context of \project we were mainly interested in behavioral reifications. A behavioral meta-object reifying message sends was used for the message send observer. As well as a behavioral meta-object for reifying the event when a message is received by certain object. State read and write are also supported by behavioral meta-objects thus \project can profile these dynamic events.
 Albedo meta-objects when attached to a single object are object-specific in nature thus fulfilling an important domain-specific profiler design requirement.
 
 Lets consider the Message Received Observer, whose responsibility is to observe when an specific object receives an specific message.
@@ -736,14 +735,14 @@ Object-specific instrumentation is not trivial to achieve in class-based languag
 Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on these constructs.
 Moreover, most languages provide a good level of structural reflection to deal with structural elements like classes, method, statements, \etc
 But most languages do not provide a standard mechanism to reflect on the dynamic abstractions of the language.
-There are typically no abstractions \chg{for}{to intercept} \on{?} meta-events such as a message send, a message receive, a state read, \etc.
+There are typically no abstractions to intercept meta-events such as a message send, a message receive, a state read, \etc.
 
 Albedo has been designed as an evolution of partial behavioral reflection for Smalltalk, which in turn was conceived as an extension of the Reflex model~\cite{Tant03a}.
-\ab{is the following important? I would comment out all the remaining}
-\on{yes, please kill it}
-\ugh{Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
+%\ab{is the following important? I would comment out all the remaining}
+%\on{yes, please kill it}
+%\ugh{Since Reflex was originally realized with Java, the Albedo approach would be achievable in a more static mainstream language like Java. 
 %The reason for choosing Pharo Smalltalk for implementing Albedo is that it more naturally supports \emph{unanticipated} use of reflection at run-time and supports an AST-based reflective code model.
-However, a Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.}
+%However, a Java solution would be more static in nature: it would not be possible to remove meta-objects completely (as code cannot be changed at run-time) and the code model would not be as closely integrated with the run-time of the language.}
 
 
 
