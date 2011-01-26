@@ -5,3 +5,4 @@ scg.bib
 *.out
 *.pdf
 *.synctex.gz
+_*.command
