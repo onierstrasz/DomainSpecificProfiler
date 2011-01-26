@@ -364,6 +364,8 @@ Common code profilers employ execution sampling as the way to cheaply obtain dyn
 
 \section{Domain-Specific Profiler}\seclabel{profiler}
 
+\on{How about: \project in a Nutshell?}
+
 % %:========
 % \subsection{Properties of a Domain-Specific Profiler} \label{fig:properties}
 % 
@@ -453,23 +455,24 @@ We will next show specific examples of various domain-specific profilers.
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Validation}\seclabel{validation}
 
-In this section we will analyze three case studies and show how \project fulfill the domain-specific profiling requirements: specifying the domain, capturing domain related events and presenting the necessary information.
+In this section we will analyze three case studies and show how \project fulfills the domain-specific profiling requirements: specifying the domain, capturing domain related events, and presenting the necessary information.
 
 %:========
 \subsection{Case Study: Caches in Mondrian}
 
 %\jr{Is this example related to the one in section 2? if yes how, we have to build the flow here otherwise is a bunch of separated examples.} \ab{Is this better now? If yes, remove these 2 comments}
 
-The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary graphical elements repaint. Theses two aspects were independently addressed, using a dedicated profiler.
+The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary \ins{repainting of?} graphical elements \del{repaint}. Theses two aspects were independently addressed, using a dedicated profiler.
+\on{Funny. In the intro you just said "without a standard profiler". You should be more precise in the intro.}
 
-\paragraph{Keeping track of the caches activations.}
-Each node has a number of caches. Activation of theses caches are under complex rules which depends on what is currently displayed, the nesting of nodes and their size. An improper implementation of the caches is a source of hard-to-track bugs and abnormal behavior. Mondrian offer two kind of caches:
+\paragraph{Keeping track of the cache activations.}
+Each node has a number of caches. Activation of theses caches is governed by complex rules which depend on what is currently displayed, the nesting of nodes and their size. Incorrect implementation of the caches can be a source of hard-to-track bugs and abnormal behavior. Mondrian offers two kinds of caches:
 \begin{itemize}
-\item A node may nest other nodes and edges. The \emph{bitmap form cache} avoid to render inner nodes by snapshooting a bitmap of the nesting node. Once the bitmap cache loaded, inner nodes are not rendered any further.
-\item The shape of a graphical element is the result of metric calculation on the model object represented by the element. Each dimension of a graphical element is mapped to a metric. The \emph{metric cache} avoid having to recompute the metrics at each rendering.
+\item A node may nest other nodes and edges. The \emph{bitmap form cache} avoids rendering inner nodes by taking a snapshot of a bitmap of the \ugh{nesting node}. \on{node nesting? nested node?} Once the bitmap cache is loaded, inner nodes are not rendered any further.
+\item The shape of a graphical element is the result of metric calculation on the model object represented by the element. Each dimension of a graphical element is mapped to a metric. The \emph{metric cache} avoids the need to recompute the metrics at each rendering.
 \end{itemize}
 
-Keeping track of the activation and deactivation of theses two caches is realized with a dedicated profiler, called {\sc MondrianCacheActivation}. The profiler is implemented as a class \co{MSMondrianActivationCacheSpy}. The class inherits from \co{MSAbstractMondrianSpy}, which will be used for the second profiler.
+Keeping track of the activation and deactivation of these two caches is realized with a dedicated profiler, called {\sc MondrianCacheActivation}. The profiler is implemented as a class \co{MSMondrianActivationCacheSpy}. The class inherits from \co{MSAbstractMondrianSpy}, which will also be used for the second profiler.
 
 {\sc MondrianCacheActivation} is defined as follows \lr{what does this demonstrate?}:
 
@@ -501,17 +504,19 @@ MSAbstractMondrianSpy subclass: #MSMondrianCacheActivationSpy
 \lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}\lr{Look for \emph{morphic damage} in the settings, the setting used to be called something like that (I don't have a Pharo image at hand). Enabling it would highlight all Morphic updates quickly after drawing them. I used it for the original Mondrian implementation.} \lr{OS X has essentially the same in the Developer Tools, but again I don't have access to that right now. There is GUI debugging utility that can visualize different kinds of events on the live screen in various colors.}
 
 {\sc MondrianCacheActivation} instantiates \project in less than 22 lines of code. 
-The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled are the node. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
+The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled \ugh{are the node}. \on{?} Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
 
-The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of Mondrian tutorial. The below part is a profile of it. Upper nodes are nesting nodes. The red color indicates that the bitmap form cache is activated, and inner nodes represent metric caches. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All Mondrian versions are available online at \url{http://www.squeaksource.com/Mondrian.html}.}.
+The profile visualization is given in \autoref{fig:MondrianExample}. The upper part is a visualization example, part of the Mondrian tutorial. The lower part is a profile of it. Upper nodes are nesting nodes. The red color indicates that the bitmap form cache is activated, and inner nodes represent metric caches. We can see that the fourth red node does not have any metric cache activated. This helped us to fix a number of issues related to the way caches are managed. These issues have been fixed in the Version 6, 9 and 10 of the package Mondrian-Core\footnote{All Mondrian versions are available online at \url{http://www.squeaksource.com/Mondrian.html}.}.
 
 
 \paragraph{Number of \co{\#displayOn:} invocation.}
-A Mondrian visualization may comprise a great deal of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, only the elements that needs to be refreshed must effectively be. Elements that are outside the window or for which their nesting node has an active bitmap form cache should not be rendered. 
+A Mondrian visualization may comprise a great number of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, \ugh{only the elements that need to be refreshed must effectively be.}
+\on{duh}
+Elements that are outside the window or for which their nesting node has an active bitmap form cache should not be rendered. 
 
-A graphical element is rendered when the method \co{\#display:on:} is invoked. Monitoring when these invocations occur is key to have a global view of what get refreshed. 
+A graphical element is rendered when the method \co{\#display:on:} is invoked. Monitoring when these invocations occur is key to having a global view of what gets refreshed. 
 
 The \project framework is instantiated to create the {\sc MondrianDisplayOn} profiler, implemented with a class \co{\sf MSMondrianSpy}:
 
@@ -520,7 +525,9 @@ MSAbstractMondrianSpy subclass: #MSMondrianDisplayOnSpy
     instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
-{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the amount of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}). Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference from two Mondrian refreshes.
+{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the number of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}).
+\on{dangling ref -- commented out}
+Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference between two Mondrian refreshes.
 
 \begin{lstlisting}
 <b>MSMondrianSpy>>initialize</b>
@@ -545,7 +552,7 @@ The installation and instrumentation of Mondrian by \project is realized by the 
 
 All the nodes obtained from the root of the model object are ``observed'' by the framework. At each invocation of the {\sf \#displayOn:} method, the block given as parameter to {\sf \#do:} is executed with the object receiver on which {\sf \#displayOn:} is invoked, the selector name and the argument. This block updates the number of displays for each node of the visualization.
 
-The profiling of Mondrian is visualized using Mondrian itself. The \co{MSMondrianSpy>>visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
+The profiling of Mondrian is visualized using Mondrian itself. The \co{MSMondrianSpy>>visualizeOn:} \on{fix} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
 % \lr{Please no source code with dots.}
 % \lr{What does this show?} 
@@ -568,10 +575,12 @@ One important point of \co{\#visualizeOn:} is to regularly update the visualizat
 
 The profiling monitors each node of the profiled visualization. Each node is associated to a progress bar that widens upon node refresh. The profiled visualization remains interactive. Clicking and drag-and-dropping nodes refresh the visualization, thus increasing the progress bar of the corresponding nodes. This profile helps identifying unnecessary rendering. We identified a situation in which nodes were refreshing without receiving user actions. This was perceived by the user as a sluggish rendering. Edges were constantly refreshed, even without being apparent. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
 
+\on{not sure what we learn from this case study. the reader gets a bit lost in the details. at least provide a short summary paragraph underlining what we have learned, and how this validates \project. aside from the fact that we have now a domain-specific profile for mondrian, what is cool?}
+
 %:========
 \subsection{Case Study: Events in Omnibrowser}
 
-OmniBrowser~\cite{Berg08c} is a framework to define and compose new browsers: graphical list-oriented tools to navigate and edit elements from an arbitrary domain. In the OmniBrowser framework, a browser is described by a domain model that specifies the domain elements that can be navigated and edited, and a metagraph that specifies the navigation between these domain elements. Nodes in the metagraph describe states the browser is in, while edges express navigation possibilities between those states. The OmniBrowser framework then dynamically composes widgets such as list menus and text panes to build an interactive browser that follows the navigation described in the metagraph.
+OmniBrowser~\cite{Berg08c} is a framework to define and compose new browsers: graphical list-oriented tools to navigate and edit elements from an arbitrary domain. In the OmniBrowser framework, a browser is described by a domain model specifying the domain elements that can be navigated and edited, and a metagraph specifying the navigation between these domain elements. Nodes in the metagraph describe states the browser is in, while edges express navigation possibilities between those states. The OmniBrowser framework then dynamically composes widgets such as list menus and text panes to build an interactive browser that follows the navigation described in the metagraph.
 
 %\lr{What does this show?}
 
@@ -610,6 +619,8 @@ MSMetaSpy subclass: #MSOmniBrowserSpy
 
 \jr{@Lukas can you take care of this use case. What was the idea behind this example?}
 
+\on{whoops. delete this case study?}
+
 %\lr{so what?}
 
 %:========
@@ -627,6 +638,8 @@ With \project we can implement the grammar coverage with a few lines of code. Th
 \end{lstlisting}
 
 Line~2 iterates over all primitive parser objects in the grammar. Line~3 attaches the event handler on Line~4 to each parser in the model. The handler then counts the activations of each parser object when we run the test suite of the grammar. This provides us with the necessary information to display the grammar coverage in a visualization as seen in \autoref{fig:grammar-coverage}.
+
+\on{weird that this section is so short while the mondrian example is so detailed. I expect a more consistent treatment of each case study}
 
 \lr{Why now the XML parser and before it was the Java parser?}
 \jr{@Lukas Do you think this should be changed? what would be the cost?}
