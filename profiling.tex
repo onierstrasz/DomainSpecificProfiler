@@ -19,8 +19,8 @@
 % constants
 \newcommand{\Title}{Domain-Specific Profiling}
 \newcommand{\TitleShort}{\Title}
-\newcommand{\Authors}{Alexandre Bergel$^1$, Lukas Renggli, Jorge Ressia$^2$}
-\newcommand{\AuthorsShort}{A. Bergel, L. Renggli, J. Ressia}
+\newcommand{\Authors}{Alexandre Bergel$^1$, Lukas Renggli, Jorge Ressia$^2$, Oscar Nierstrasz$^2$}
+\newcommand{\AuthorsShort}{A. Bergel, L. Renggli, J. Ressia, O. Nierstrasz}
 
 % references
 \usepackage[colorlinks]{hyperref}
@@ -208,14 +208,14 @@ The advances of domain-specific languages and models reveals a drastic change in
 \on{should be a list of 4 similar things: e.g. tools to build, to transform, to check and to integrate}
 
 While research on domain-specific languages has made consistent progress in language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done on profiling. We consider profiling to be the activity to record and analyze program execution. Profiling is essential to analyze transient run-time data that otherwise would be too hard to harvest and compare. Code profilers commonly employ execution sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted by regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure. Specialized domains need specialized profilers.
-\on{Not really a crisp statement of the problem. The point is, I think, that sampling-based profilers focus on certain kind of information which is not really what you are looking for in certain domains. We need other, specialized profilers that dig up other kinds of information. Mondrian gives an example of different kind of profiling information needed. The question then is, can we have a framework for easily building specialized profilers. The title of the paper expresses this beautifully, but the above paragraph fails to home in on the key point. I would just add the following sentence to round out the paragraph:}
+\on{Not really a crisp statement of the problem. The point is, I think, that sampling-based profilers focus on certain kind of information which is not really what you are looking for in certain domains. We need other, specialized profilers that dig up other kinds of information. Mondrian gives an example of different kind of profiling information needed. The question then is, can we have a framework for easily building specialized profilers. The title of the paper expresses this beautifully, but the above paragraph fails to home in on the key point. I would just add the following sentence to round out the paragraph:} \ab{I absolutely agree with you}
 
 
 %\lr{I don't really see how Mondrian demonstrates the problem. I would outline the problem as given in the commented bullet list at the beginning of this section.}
 
 As an introductory illustration, consider the Mondrian visualization engine\footnote{Mondrian is described in \autoref{mondrian}.}. A visualization is described in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
 %\footnote{\lr{I would avoid footnotes (they look ugly) and just say that there were complaints.} This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. 
-Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved without a standard profiler by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not help identify which of the rendered nodes are responsible for a slowdown. The Mondrian domain is defined as a graph of objects, which cannot be easily retrieved from the method call stack and from the source code artifacts. A specialized Mondrian profiler would be aware of Mondrian's domain concepts and provide profiling information tailored to the relevant structures.
+Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved \chg{without a standard profiler}{with two domain-specific profilers} by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not help identify which of the rendered nodes are responsible for a slowdown. The Mondrian domain is defined as a graph of objects, which cannot be easily retrieved from the method call stack and from the source code artifacts. A specialized Mondrian profiler would be aware of Mondrian's domain concepts and provide profiling information tailored to the relevant structures.
 %The Mondrian domain particularities \lr{what are these?} are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
 
 %The domain, defined in terms of nodes and edges, \ugh{used by Mondrian is completely ignored by standard code profiler since they can only consider classes, method and stack frame}. This problem \ugh{, and many more,} has been successfully addressed with adequate domain-specific profilers.
@@ -251,13 +251,15 @@ This section illustrates two shortcomings of traditional profiling techniques wh
 \paragraph{CPU time profiling.}
 Mondrian\footnote{\url{http://www.moosetechnology.org/tools/mondrian}}~\cite{Meye06a} is an open and agile visualization engine. 
 Mondrian uses a graph, made of (possibly nested) nodes and edges, to describe a visualization. 
-In June 2010 a serious performance issue was identified\footnote{\lr{again?} \url{http://bit.ly/g8GjIh} \on{please use a custom URL. bit.ly supports this}} when producing a visualization.
+In June 2010 a serious performance issue was identified\footnote{\url{http://bit.ly/MessageTallySample}} when producing a visualization.
 Tracking down the cause of the poor performance was not trivial. We first used the sample-based profiler provided by Pharo\footnote{\url{http://pharo-project.org/}}.
 
 Execution sampling approximates the time spent in an application's methods by periodically stopping a program and recording the current set of methods under executions. Such a profiling technique is relatively accurate since it has little impact on the overall execution.
 Sampling has been adopted by almost all mainstream profilers (JProfiler\footnote{\url{http://www.ej-technologies.com}}, YourKit\footnote{\url{http://www.yourkit.com}}, xprof~\cite{Gupt92a}, hprof\footnote{\url{http://java.sun.com/developer/technicalArticles/Programming/HPROF.html}}).
 
-The profiler produces a textual output, \on{no. do not use a comma to join two sentences in English!} we next show an \ugh{except} \on{?} of it: \on{crappy sentence. rewrite}
+%The profiler produces a textual output, \on{no. do not use a comma to join two sentences in English!} we next show an \ugh{except} \on{?} of it: \on{crappy sentence. rewrite}
+
+MessageTally, the Pharo standard sampling-based profiler, textually describes the execution in terms of CPU consumption and invocation for each method of Mondrian:
 
 \begin{lstlisting}
 54.8% {11501ms} MOCanvas>>drawOn: 
@@ -461,13 +463,13 @@ In this section we will analyze three case studies and show how \project fulfill
 
 %\jr{Is this example related to the one in section 2? if yes how, we have to build the flow here otherwise is a bunch of separated examples.} \ab{Is this better now? If yes, remove these 2 comments}
 
-The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary \ins{repainting of?} graphical elements \del{repaint}. Theses two aspects were independently addressed, using a dedicated profiler.
-\on{Funny. In the intro you just said "without a standard profiler". You should be more precise in the intro.}
+The performance issue of Mondrian described earlier (\autoref{sec:problem}) is rooted in a complex combination of different aspects of Mondrian rendering: redundancy of metrics calculation and unnecessary repainting of graphical elements. Theses two aspects were independently addressed, using a dedicated profiler \ins{for each}.
+\on{Funny. In the intro you just said "without a standard profiler". You should be more precise in the intro.}\ab{I fixed the intro}
 
 \paragraph{Keeping track of the cache activations.}
 Each node has a number of caches. Activation of theses caches is governed by complex rules which depend on what is currently displayed, the nesting of nodes and their size. Incorrect implementation of the caches can be a source of hard-to-track bugs and abnormal behavior. Mondrian offers two kinds of caches:
 \begin{itemize}
-\item A node may nest other nodes and edges. The \emph{bitmap form cache} avoids rendering inner nodes by taking a snapshot of a bitmap of the \ugh{nesting node}. \on{node nesting? nested node?} Once the bitmap cache is loaded, inner nodes are not rendered any further.
+\item A node may nest other nodes and edges. The \emph{bitmap form cache} avoids rendering inner nodes by taking a snapshot of a bitmap of the nested node. Once the bitmap cache is loaded, inner nodes are not rendered any further.
 \item The shape of a graphical element is the result of metric calculation on the model object represented by the element. Each dimension of a graphical element is mapped to a metric. The \emph{metric cache} avoids the need to recompute the metrics at each rendering.
 \end{itemize}
 
@@ -476,7 +478,7 @@ Keeping track of the activation and deactivation of these two caches is realized
 {\sc MondrianCacheActivation} is defined as follows \lr{what does this demonstrate?}:
 
 \begin{lstlisting}[numbers=left]
-MSMetaSpy subclass: #MSAbstractMondrianSpy
+<b>MSMetaSpy subclass: #MSAbstractMondrianSpy</b>
     instanceVariableNames: 'nodes'
 
 <b>MSAbstractMondrianSpy>>setUp</b>
@@ -500,10 +502,10 @@ MSAbstractMondrianSpy subclass: #MSMondrianCacheActivationSpy
         view root applyLayout ]
 \end{lstlisting}
 
-\lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}\lr{Look for \emph{morphic damage} in the settings, the setting used to be called something like that (I don't have a Pharo image at hand). Enabling it would highlight all Morphic updates quickly after drawing them. I used it for the original Mondrian implementation.} \lr{OS X has essentially the same in the Developer Tools, but again I don't have access to that right now. There is GUI debugging utility that can visualize different kinds of events on the live screen in various colors.}
+\lr{Why is this better than what the Squeak damage visualizer and the OS X GUI damage visualizer provides?}\ab{I do not know about the squeak and OSX damage visualizer. How can I invoke it? I tried some googling but found nothing}\lr{Look for \emph{morphic damage} in the settings, the setting used to be called something like that (I don't have a Pharo image at hand). Enabling it would highlight all Morphic updates quickly after drawing them. I used it for the original Mondrian implementation.}\ab{It works well. I did not know about that} \lr{OS X has essentially the same in the Developer Tools, but again I don't have access to that right now. There is GUI debugging utility that can visualize different kinds of events on the live screen in various colors.} \ab{I am not sure whether we can mention it in the paper, I haven't found a compelling url about it. Just http://developer.apple.com/library/mac/\#documentation/Performance/Conceptual/Drawing/Articles/FlushingContent.html}
 
 {\sc MondrianCacheActivation} instantiates \project in less than 22 lines of code. 
-The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} that is profiled \ugh{are the node}. \on{?} Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
+The code opens a new Mondrian visualization that visualizes the profiling the nodes of another visualization, given by an \co{nodes} instances variable. The \emph{domain} is the nodes of the profiled visualization. Lines 7 and 12 describes the following steps: nodes are displayed and the ownership (nesting) is represented with edges. The domain is profiled against two relevant properties. These are represented in Lines 14 and 17: a bitmap form and metrics. The profile is presented via the Mondrian script given above. The evolution over execution is realized via a periodical refresh, indicated in the script at Line 11. The model being profiled and the profiler are represented with different objects in the host language. The scope of the profiling is naturally given by operating on a different object.
 
 \fig{}{.8}{MondrianExample}{Profiling of a Mondrian visualization in Mondrian.}
 
@@ -511,21 +513,18 @@ The profile visualization is given in \autoref{fig:MondrianExample}. The upper p
 
 
 \paragraph{Number of \co{\#displayOn:} invocation.}
-A Mondrian visualization may comprise a great number of graphical elements. At each refresh of the Mondrian visualization dictated by the operating system, \ugh{only the elements that need to be refreshed must effectively be.}
-\on{duh}
-Elements that are outside the window or for which their nesting node has an active bitmap form cache should not be rendered. 
+A Mondrian visualization may comprise a great number of graphical elements. A refresh of the visualization is triggered by the operating system, resulting from user actions such as a mouse movement or a keystroke. Refreshing the Mondrian canvas iterates over all the nodes and edges and order a new rendering. Elements that are outside the window or for which their nesting node has an active bitmap form cache should not be rendered. 
 
 A graphical element is rendered when the method \co{\#display:on:} is invoked. Monitoring when these invocations occur is key to having a global view of what gets refreshed. 
 
 The \project framework is instantiated to create the {\sc MondrianDisplayOn} profiler, implemented with a class \co{\sf MSMondrianSpy}:
 
 \begin{lstlisting}
-MSAbstractMondrianSpy subclass: #MSMondrianDisplayOnSpy
+<b>MSAbstractMondrianSpy subclass: #MSMondrianDisplayOnSpy</b>
     instanceVariableNames: 'actualCounter previousCounter'
 \end{lstlisting}
 
-{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the number of emitted events (the \emph{Profile evolution} property, listed in \autoref{fig:properties}).
-\on{dangling ref -- commented out}
+{\sf MSMondrianSpy} defines two instance variables: {\sf actualCounter} keeps track of the actual amount of events and {\sf previousCounter} the amount of events that were recorded before a new action in the profiled Mondrian visualization. These two variables are necessary to monitor the evolution of the number of emitted events.
 Subtracting the value stored in {\sf previousCounter} from {\sf actualCounter} gives the difference between two Mondrian refreshes.
 
 \begin{lstlisting}
@@ -572,9 +571,10 @@ One important point of \co{\#visualizeOn:} is to regularly update the visualizat
 
 \autoref{fig:MondrianProfiler} gives a screenshot of a visualization and the profiler. The right-hand side is an example of the \emph{System Complexity} visualization~\cite{Lanz03d} of the collection class hierarchy in Pharo. The left hand side shows the profiler applied to the visualization. The horizontal bar indicates the amount of times the corresponding node has been displayed. %This visualization has been obtained by dragging and dropping the \ct{Collection} node
 
-The profiling monitors each node of the profiled visualization. Each node is associated to a progress bar that widens upon node refresh. The profiled visualization remains interactive. Clicking and drag-and-dropping nodes refresh the visualization, thus increasing the progress bar of the corresponding nodes. This profile helps identifying unnecessary rendering. We identified a situation in which nodes were refreshing without receiving user actions. This was perceived by the user as a sluggish rendering. Edges were constantly refreshed, even without being apparent. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
+The profiling monitors each node of the profiled visualization. Each node is associated to a progress bar that widens upon node refresh. The profiled visualization remains interactive. Clicking and drag-and-dropping nodes refresh the visualization, thus increasing the progress bar of the corresponding nodes. This profile helps identifying unnecessary rendering. We identified a situation in which nodes were refreshing without receiving user actions. This was perceived by the user with a sluggish rendering. Edges were constantly refreshed, even without being apparent. This problem is addressed in the version 2.30 of Mondrian\footnote{\url{http://code.google.com/p/moose-technology/issues/detail?id=450}}. 
 
-\on{not sure what we learn from this case study. the reader gets a bit lost in the details. at least provide a short summary paragraph underlining what we have learned, and how this validates \project. aside from the fact that we have now a domain-specific profile for mondrian, what is cool?}
+\on{not sure what we learn from this case study. the reader gets a bit lost in the details. at least provide a short summary paragraph underlining what we have learned, and how this validates \project. aside from the fact that we have now a domain-specific profile for mondrian, what is cool?} \ab{humm... I get stuck on this. This profiler helped solving the problem described in Section 2.1.}
+
 
 %:========
 \subsection{Case Study: Events in Omnibrowser}
@@ -618,7 +618,7 @@ MSMetaSpy subclass: #MSOmniBrowserSpy
 
 \jr{@Lukas can you take care of this use case. What was the idea behind this example?}
 
-\on{whoops. delete this case study?}
+\on{whoops. delete this case study?} \ab{+1}
 
 %\lr{so what?}
 
@@ -652,7 +652,7 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
     \label{fig:grammar-coverage}
 \end{figure}
 
-\ab{Which version of PetitParser correspond to the left hand side in Figure 4?} 
+\ab{I agree that this section is short. It would be cool to expand it a bit}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % \section{Discussion}\seclabel{discussion}
@@ -731,7 +731,7 @@ The method \ct{install} binds a meta-object to the object to be observed.
 The method \ct{setUp} initializes the profiling meta-object with a behavioral meta-object. 
 This meta-object evaluates the handler when a specific message is received by the profiled object. This mechanism is termed \emph{object-specific instrumentation}.
 
-Object-specific instrumentation is not trivial to achieve in class-based languages like Smalltalk and Java \ab{without a significant overhead? AspectJ has a perObject keyword I think}. 
+Object-specific instrumentation is not trivial to achieve in class-based languages like Smalltalk and Java \ab{AspectJ has a perObject keyword I think. Are you focusing on performances?}. 
 Classes are deeply rooted in the language interpreter or virtual machine and its performance is tweaked to rely heavily on these constructs.
 Moreover, most languages provide a good level of structural reflection to deal with structural elements like classes, method, statements, \etc
 But most languages do not provide a standard mechanism to reflect on the dynamic abstractions of the language.
