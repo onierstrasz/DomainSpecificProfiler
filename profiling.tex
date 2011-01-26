@@ -409,26 +409,29 @@ The key idea behind \project is to define domain-specific events that can later 
 \autoref{fig:MetaSpy} shows a simplified class diagram of \project.
 There are two main abstractions: the observers and the domain-specific profilers. 
 
-An observer is responsible of adapting a domain-specific model and triggering specific actions when certain events happen.
-These observers follow the observer pattern~\cite{Gamm95a} and the profilers are the subscribers.
+An observer is responsible for adapting a domain-specific model and triggering specific actions when certain events happen.
+These observers follow the observer pattern~\cite{Gamm95a} and the profilers are the \ugh{subscribers}.
+\on{Ugh! You are confusing different terms for the same thing. In the observer pattern there are observers and subjects. Synonyms are subscribers (observers) and publishers (subjects). In this diagram it appears that the profilers are not subscribers (observers) at all, nor are they subjects (publishers), but rather they manage a list of observers. Better get your story right!}
 %Fulfilling the specific but these are not conditions that are constantly checked, these are events being triggered from the model} of an observer will trigger the handler defined in that observer.
-Some observers work by mean of registering to existing hooks. Other observers intercept the system using meta-programming, this is also known as instrumentation.
+Some observers \ugh{work by means of registering} to existing hooks. Other observers intercept the system using meta-programming, \chg{this}{which} is also known as instrumentation.
 Installing an observer activates the observer and the collection of events, while uninstalling removes the observer. 
 
 
 Some of the observers are:
 \begin{description}
-    \item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer allows to hook into applications using this infrastructure and to dispatch them to the profiler.
+    \item[Announcement Observer.] Announcements provide a flexible framework for event handling. The announcement observer \ugh{allows to} hook into applications using this infrastructure and to dispatch them to the profiler.
     \item[Method Observer.] This observer listens to the event when an specific method is invoked for any instance of a class.
-    \item[Object Observer.] This observer allows us to trigger event for a single instance of a class. This is called object-specific profiling. Some examples of event a single instance can trigger are: message send, message receive, state read and state write.
-    \item[Parser Observer.] The parser observers triggers an event whenever a specific production is activated.
+    \item[Object Observer.] This observer allows us to trigger \ugh{event} \on{an event? events?} for a single instance of a class.
+    \on{wtf? observers don't trigger events, they observe them!}
+    This is called object-specific profiling. Some examples of events a single instance can trigger are: message send, message receive, state read and state write.
+    \item[Parser Observer.] \ugh{The parser observer triggers an event} \on{no no no!} whenever a specific production is activated.
     %\item[Message Receive Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is received by a single instance of a class. The message name and receiver can be taken into account in the definition of the condition. 
     %\item[Message Send Observer.] \lr{I don't see the difference to the object observer, I would remove this one.} This observer models when a message is sent by a single instance of a class. We can scope this instrumentation to a single or more methods.
     The message name, sender and receiver can be taken into account in the definition of the condition. 
 \end{description}
 
-Profilers are responsible for modeling the domain-specific behavior to profile the main abstractions in the each domain.
-\ct{MetaSpy} class models the general behavior of any profiler. It is composed of a model which is being profiled and a list of active observer or instrumentation strategies.
+Profilers are responsible for modeling the domain-specific behavior to profile the main abstractions in each domain.
+The \ct{MetaSpy} class models the general behavior of any profiler. It is composed of a model which is being profiled and a list of active observer or instrumentation strategies.
 Each of the different profilers are called spies. They are activated when they are installed. The installation process for each spy is defined in the \ct{setUp} method.
 Each spy is responsible for its own presentation and this is modeled in the method \ct{visualize}.
 
