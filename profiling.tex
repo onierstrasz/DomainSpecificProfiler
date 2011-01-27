@@ -476,7 +476,7 @@ A Mondrian visualization may comprise a great number of graphical elements. A re
 A graphical element is rendered when the method \co{\#display:on:} is invoked. Monitoring when these invocations occur is key to having a global view of what gets refreshed. 
 
 
-\subsection*{Capturing the domain}
+\subsection*{Capturing the events}
 %\paragraph{Capturing the domain}
 The \project framework is instantiated to create the {\sc MondrianDisplayOn} profiler, implemented with a class \co{\sf MSMondrianSpy}:
 
@@ -518,7 +518,7 @@ The instrumentation is only applied to all nodes in this visualization. Only whe
 This object-specific behavior is possible due to the use of a reflection framework called Albedo.
 
 
-\subsection*{Presenting the domain}
+\subsection*{Presenting the results}
 The profiling of Mondrian is visualized using Mondrian itself. The \co{visualizeOn:} method describes the visualization given in \autoref{fig:MondrianProfiler}.
 
 % \lr{Please no source code with dots.}
@@ -615,7 +615,7 @@ This behavior impacts negatively in the performance of the IDE. Moreover, is som
 
 %\lr{What does this show?}
 
-\subsection*{Capturing the domain}
+\subsection*{Capturing the events}
 To profile this domain-specific case we implemented the class \co{\sf MSOmniBrowserSpy}:
 
 \begin{lstlisting}
@@ -642,7 +642,7 @@ For example, we could define \co{\sf OBSystemBrowser} browsing an specific class
 All Omni Browser have an internal collaborator named \emph{announcer} which is responsible for the signaling of announcements.
 This is the object used by the profiler to catch the announcement events.
 
-\subsection*{Presenting the domain}
+\subsection*{Presenting the results}
 A Mondrian visualization was implemented to list the type and the number of announcement triggered.
 
 %\paragraph{Meta-model instantiation}:
@@ -671,7 +671,7 @@ A Mondrian visualization was implemented to list the type and the number of anno
 Rigorous test suites try to ensure that each part of the grammar is covered by tests and well specified according to the respective language standards. Validating that each production of the grammar is covered by the tests is a difficult activity. As mentioned previously, the traditional tools of the host language work on a method- and statement-level and thus cannot produce meaningful results in the context of PetitParser where the grammar is modeled as a graph of objects.
 
 
-\subsection*{Capturing the domain}
+\subsection*{Capturing the events}
 With \project we can implement the grammar coverage with a few lines of code. The instrumentation happens at the level of the primitive parser objects. The method \ct{observeParser:in:} wraps the parser object with a handler block that is called for each activation of the parser.
 
 \begin{lstlisting}[numbers=left]
@@ -687,7 +687,7 @@ Line~2 iterates over all primitive parser objects in the grammar. Line~3 attache
 The domain in this case is an instance of the grammar that we want to analyze.
 
 
-\subsection*{Presenting the domain}
+\subsection*{Presenting the results}
 This provides us with the necessary information to display the grammar coverage in a visualization as seen in \autoref{fig:grammar-coverage}.
 
 \begin{figure}[h!tb]
