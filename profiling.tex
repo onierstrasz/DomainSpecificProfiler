@@ -204,35 +204,42 @@
 % 
 % \jr{end}
 
-The advances of domain-specific languages and models reveals a drastic change in the way software is being built. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, transform models~\cite{Tisi10a}, to program checking~\cite{Reng10b} and tool integration~\cite{Reng10a}.
-\on{should be a list of 4 similar things: e.g. tools to build, to transform, to check and to integrate}
+Recent advances in domain-specific languages and models reveal a drastic change in the way software is being built. The software engineering community has seen a rapid emergence of domain-specific tools, ranging from tools to easily build domain-specific languages~\cite{Viss04a}, to transform models~\cite{Tisi10a}, to check source code~\cite{Reng10b}, and to integrate development tools~\cite{Reng10a}.
 
-While research on domain-specific languages has made consistent progress in language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done on profiling. We consider profiling to be the activity to record and analyze program execution. Profiling is essential to analyze transient run-time data that otherwise would be too hard to harvest and compare. Code profilers commonly employ execution sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted by regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure. Specialized domains need specialized profilers.
-\on{Not really a crisp statement of the problem. The point is, I think, that sampling-based profilers focus on certain kind of information which is not really what you are looking for in certain domains. We need other, specialized profilers that dig up other kinds of information. Mondrian gives an example of different kind of profiling information needed. The question then is, can we have a framework for easily building specialized profilers. The title of the paper expresses this beautifully, but the above paragraph fails to home in on the key point. I would just add the following sentence to round out the paragraph:} \ab{I absolutely agree with you}
-
+While research on domain-specific languages has made consistent progress in language specification~\cite{Deur00a}, implementation~\cite{Cuad09a}, evolution~\cite{Free06a} and verification~\cite{Kaba08a}, little has been done to support profiling. We consider profiling to be the activity of recording and analyzing program execution. Profiling is essential for analyzing transient run-time data that otherwise would be too hard to harvest and compare. Code profilers commonly employ execution sampling as the way to obtain dynamic run-time information. Unfortunately, information extracted by regularly sampling the call stack cannot be meaningfully used to profile a high-level domain built on top of the standard language infrastructure. Specialized domains need specialized profilers.
+%\on{Not really a crisp statement of the problem. The point is, I think, that sampling-based profilers focus on certain kind of information which is not really what you are looking for in certain domains. We need other, specialized profilers that dig up other kinds of information. Mondrian gives an example of different kind of profiling information needed. The question then is, can we have a framework for easily building specialized profilers. The title of the paper expresses this beautifully, but the above paragraph fails to home in on the key point. I would just add the following sentence to round out the paragraph:} \ab{I absolutely agree with you}
 
 %\lr{I don't really see how Mondrian demonstrates the problem. I would outline the problem as given in the commented bullet list at the beginning of this section.}
 
-As an introductory illustration, consider the Mondrian visualization engine\footnote{Mondrian is described in \autoref{mondrian}.}. A visualization is described in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
+Let us consider the example of the Mondrian visualization engine (details follow in \autoref{mondrian}).
+Mondrian models visualizations as graphs, \ie in terms of nodes and edges. One of the important performance issues we recently faced is the refresh frequency: nodes and edges were refreshed too often.
 %\footnote{\lr{I would avoid footnotes (they look ugly) and just say that there were complaints.} This has triggered a large discussion on the Moose mailing list (\url{http://bit.ly/fwsRbp}).}. 
-Standard code profilers did not help to fix this since they are just able to give the share the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}. The problem has been solved \chg{without a standard profiler}{with two domain-specific profilers} by identifying \emph{which} nodes and edges were indeed refreshed too often. Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not help identify which of the rendered nodes are responsible for a slowdown. The Mondrian domain is defined as a graph of objects, which cannot be easily retrieved from the method call stack and from the source code artifacts. A specialized Mondrian profiler would be aware of Mondrian's domain concepts and provide profiling information tailored to the relevant structures.
+Standard code profilers did not help to localize the source of the problem since they are just able to report the share of time the CPU spent in the method \co{\#displayOn:} of the class \co{MONode} and \co{MOEdge}.
+The problem was finally resolved by developing a custom profiler that could identify \emph{which} nodes and edges were indeed refreshed too often. This domain-specific profiler was able to exploit knowledge of Mondrian's domain concepts to gather and present the needed information.
+
+% Knowing the presence of some particular frames on the method call stack (as the majority of code profiler provide) does not help identify which of the rendered nodes are responsible for a slowdown. The Mondrian domain is defined as a graph of objects, which cannot be easily retrieved from the method call stack and from the source code artifacts. A specialized Mondrian profiler would be aware of Mondrian's domain concepts and provide profiling information tailored to the relevant structures.
 %The Mondrian domain particularities \lr{what are these?} are superfluous by standard code profiler which are only concerned with stack frames and source code artifacts.
 
 %The domain, defined in terms of nodes and edges, \ugh{used by Mondrian is completely ignored by standard code profiler since they can only consider classes, method and stack frame}. This problem \ugh{, and many more,} has been successfully addressed with adequate domain-specific profilers.
 
-This paper proposes a general solution for profiling specific domains. It offers the essential properties an effective domain-specific profiler must meet. 
-%\lr{do not understand:} It is important to notice that, \ugh{as metamodels are becoming first class entities}, a profiler's measurement dimension cannot be solely limited to execution time. 
-We identified the following requirements a domain-specific profiler must fulfill: specifying, capturing and presenting. \jr{check on comment}
-%\ugh{\emph{specifying the domain}, \emph{capture domain events}, \emph{effective information presentation}}. \on{should be: specifying, capturing, presenting}
-By fulfilling these requirements, a profiler will be effective at identifying bottlenecks and anomalies in the application code and be able to present these in terms of the relevant domain concepts.
-\on{?}
-These properties will be illustrated in three domains: Mondrian visualizations, OmniBrowser browser models, and PetitParser grammars. These profilers were designed to assess the quality of the domain modeling. A number of bugs and issues have been identified and fixed.
+We argue that there is a need for a general approach to easily develop specialized profilers for domain-specific languages and tools.
+A general approach must offer means to (i) \emph{specify} the domain concepts of interest, (ii) \emph{capture} the relevant information from the run-time execution, and (iii) \emph{present} the results to the developer.
+
+In this paper we introduce such a general approach for domain-specific profiling based on events. In this approach, called \project, one specifies the events of interest for a given domain, one captures them either by subscribing to existing application events, or to events generated with the help of a reflective layer, and one presents them as a graph-based visualization.
+
+%This paper proposes a general solution for profiling specific domains. It offers the essential properties an effective domain-specific profiler must meet. 
+%%\lr{do not understand:} It is important to notice that, \ugh{as metamodels are becoming first class entities}, a profiler's measurement dimension cannot be solely limited to execution time. 
+%We identified the following requirements a domain-specific profiler must fulfill: specifying, capturing and presenting. \jr{check on comment}
+%%\ugh{\emph{specifying the domain}, \emph{capture domain events}, \emph{effective information presentation}}. \on{should be: specifying, capturing, presenting}
+%By fulfilling these requirements, a profiler will be effective at identifying bottlenecks and anomalies in the application code and be able to present these in terms of the relevant domain concepts.
+%\on{?}
+%These properties will be illustrated in three domains: Mondrian visualizations, OmniBrowser browser models, and PetitParser grammars. These profilers were designed to assess the quality of the domain modeling. A number of bugs and issues have been identified and fixed.
 
 The contributions of this paper are: (1) the identification of the need for domain-specific profilers, (2) the presentation of three real-world case-studies where domain-specific profilers helped to significantly improve performance and correctness of domain-specific code, and (3) the presentation of an infrastructure for prototyping domain-specific profilers.
 
 \paragraph{Outline.} 
-The remainder of this paper is structured as follows: \autoref{sec:problem} illustrates the problems of using a general-purpose profiler on code building on top of domain-specific language. \autoref{sec:profiler} introduces our approach to domain-specific profiling.
-\autoref{sec:validation} demonstrate how our approach solves the domain-specific profilers requirements with three use cases. \autoref{sec:implementation} presents our infrastructure to implement domain-specific profilers; and \autoref{sec:conclusion} summarizes the paper and discusses future work.
+The remainder of this paper is structured as follows: \autoref{sec:problem} illustrates the problems of using a general-purpose profiler on code that is built on top of domain-specific language. \autoref{sec:profiler} introduces our approach to domain-specific profiling.
+\autoref{sec:validation} demonstrates how our approach solves the requirements of domain-specific profilers with three use cases. \autoref{sec:implementation} presents our infrastructure to implement domain-specific profilers; and \autoref{sec:conclusion} summarizes the paper and discusses future work.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Problem}\seclabel{problem}
